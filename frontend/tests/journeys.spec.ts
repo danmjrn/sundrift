@@ -3,7 +3,7 @@ import {test,expect,type Page} from '@playwright/test';
 let browserErrors:string[]=[];
 test.beforeEach(async({page})=>{browserErrors=[];page.on('pageerror',e=>browserErrors.push(e.message));page.on('response',r=>{if(r.status()>=500)browserErrors.push(`${r.status()} ${r.url()}`);});});
 test.afterEach(async()=>{expect(browserErrors).toEqual([]);});
-async function audit(page:Page){const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(result.violations).toEqual([]);}
+async function audit(page:Page){await expect(page).toHaveTitle(/NoirStay/);const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(result.violations).toEqual([]);}
 function future(days:number){const d=new Date();d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);}
 async function demo(page:Page,role:string,next='/'){await page.goto('/login?next='+encodeURIComponent(next));await page.getByRole('button',{name:'Demo '+role,exact:true}).click();await expect(page).not.toHaveURL(/\/login/);}
 test('guest search, wishlist, persisted checkout, host reservation and cancellation',async({page},testInfo)=>{
@@ -46,6 +46,6 @@ test('registration, persisted account editing, logout and password login retain 
  await page.goto('/account');await page.getByRole('main').getByLabel('Your name',{exact:true}).filter({visible:true}).fill('A new demo name');await page.getByRole('button',{name:'Save details',exact:true}).click();await expect(page.getByRole('main').getByText('Your account details have been saved.')).toBeVisible();await page.reload();await expect(page.getByRole('main').getByLabel('Your name',{exact:true}).filter({visible:true})).toHaveValue('A new demo name');
  const catalogue=await (await page.request.get('/api/v1/catalogue')).json();const unit=catalogue.items[0].id;
  await page.getByRole('button',{name:'Sign out',exact:true}).click();await expect(page).toHaveURL(/\/$/);
- await page.goto('/login?next=/search');await page.getByRole('main').getByLabel('Email address',{exact:true}).filter({visible:true}).fill(email);await page.getByRole('main').getByLabel('Password',{exact:true}).filter({visible:true}).fill(password);await page.getByRole('button',{name:'Sign in',exact:true}).click();await expect(page).toHaveURL(/\/search$/);
+ await page.goto('/login?next=/search');await page.getByRole('main').getByLabel('Email address',{exact:true}).filter({visible:true}).fill(email);await page.getByRole('main').getByLabel('Password',{exact:true}).filter({visible:true}).fill(password);await page.getByRole('button',{name:'Sign in',exact:true}).click();await expect(page).toHaveURL(url=>url.pathname==='/search');
  await demo(page,'host','/host');const host=await (await page.request.get('/api/v1/host')).json();expect(host.listings.map((l:{id:string})=>l.id)).toContain(unit);
 });
