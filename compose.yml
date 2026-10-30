@@ -1,0 +1,65 @@
+name: noirstay
+services:
+  database:
+    image: postgres:18.6-alpine
+    environment:
+      POSTGRES_DB: noirstay
+      POSTGRES_USER: noirstay
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}
+    volumes:
+      - database:/var/lib/postgresql
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U noirstay -d noirstay']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: jdbc:postgresql://database:5432/noirstay
+      DATABASE_USER: noirstay
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      MEDIA_ROOT: /app/media
+      DEMO_REFERENCE_DATE: ${DEMO_REFERENCE_DATE:-}
+      DEMO_CONTEXTS_PER_HOUR: ${DEMO_CONTEXTS_PER_HOUR:-10}
+    volumes:
+      - media:/app/media
+    depends_on:
+      database: {condition: service_healthy}
+    healthcheck:
+      test: [CMD-SHELL, 'wget -qO- http://127.0.0.1:8080/actuator/health/readiness | grep -q UP']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+  frontend:
+    build: ./frontend
+    environment:
+      API_INTERNAL_URL: http://backend:8080
+    depends_on:
+      backend: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  edge:
+    image: nginx:1.30.6-alpine
+    ports:
+      - '${PUBLIC_PORT:-3000}:80'
+    volumes:
+      - ./infrastructure/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      frontend: {condition: service_healthy}
+    healthcheck:
+      test: [CMD-SHELL, 'wget -qO- http://127.0.0.1/login >/dev/null']
+      interval: 15s
+      retries: 10
+    restart: unless-stopped
+volumes:
+  database:
+  media:

@@ -1,0 +1,5 @@
+The original booking exercise could admit overlapping stays for different guests and accepted persistence entities and client ownership assumptions. This change turns the same repository into NoirStay: a Spring/PostgreSQL booking application with an original Next.js interface, isolated portfolio demo access, guest/host/admin journeys and a portable Compose setup.
+
+Reservations use a shared PostgreSQL inventory exclusion constraint, bounded holds, explicit expiry, persisted idempotency responses and transactional simulated settlement/refunds. Prices and cancellation policies are snapshotted, ownership derives from Spring sessions, and CSRF protects browser mutations. Normal startup has no demo entry points or privileged fixtures.
+
+Validation and screenshots are recorded in docs/VERIFICATION.md. Setup, architecture, five-minute walkthrough, deployment/rollback instructions and known limitations are in README and docs. No existing MySQL data migration, real payments, email delivery or production capacity is claimed. Repository administration/publication status must be verified separately as described in docs/GITHUB.md.

@@ -1,0 +1,1 @@
+export default function Loading(){return <div className="wrap page-pad" aria-live="polite" aria-busy="true"><p className="eyebrow">Making room for your next stay</p><div className="skeleton heading-skeleton"/><div className="stay-grid">{[1,2,3].map(x=><div key={x} className="skeleton card-skeleton"/>)}</div><span className="sr-only">Loading stays…</span></div>;}

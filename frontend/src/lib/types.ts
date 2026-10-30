@@ -1,0 +1,8 @@
+export type User = {id:string;email:string;name:string;role:'GUEST'|'HOST'|'ADMIN';demo:boolean};
+export type Price = {nightlyRate:number;nights:number;subtotal:number;cleaningFee:number;serviceFee:number;tax:number;total:number;currency:string;cancellationPolicy:string};
+export type Listing = {id:string;slug:string;title:string;description:string;type:string;destination:string;latitude:number;longitude:number;capacity:number;beds:number;bathrooms:number;amenities:string[];images:string[];nightlyRate:number;cleaningFee:number;currency:string;houseRules:string;cancellationPolicy:string;hostName?:string;state:string;rating?:number;reviewCount?:number;reviews?:{rating:number;body:string;author:string}[];stayPrice?:Price};
+export type SearchResult={items:Listing[];page:number;hasMore:boolean;pageSize:number};
+export type Booking={notice?:string;id:string;reference:string;listingId:string;checkIn:string;checkOut:string;guests:number;status:'HOLD'|'CONFIRMED'|'CANCELLED'|'EXPIRED'|'FAILED';total:number;refund:number;expiresAt:string;reviewed?:boolean;snapshot:Price & {listingTitle:string;slug:string;destination:string};payments?:{outcome:string;amount:number}[]};
+export type Block={id:string;listingId:string;checkIn:string;checkOut:string;kind:string};
+export type HostData={listings:Listing[];reservations:Booking[];blocks:Block[];metrics:{confirmedStays:number;simulatedConfirmedValue:number}};
+export type AdminData={listings:Listing[];bookings:Booking[];users:{id:string;displayName:string;role:string;email:string}[];payments:{id:string;bookingId:string;outcome:string;amount:number}[];audit:{id:string;action:string;resourceId:string;createdAt:string}[];metrics:{totalBookings:number;confirmedStays:number;simulatedConfirmedValue:number}};
