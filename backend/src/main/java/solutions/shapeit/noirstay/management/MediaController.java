@@ -48,10 +48,15 @@ public class MediaController {
         try(ImageInputStream stream=ImageIO.createImageInputStream(file.getInputStream())) {
             var readers=ImageIO.getImageReaders(stream);if(!readers.hasNext()) throw new ApiException(400,"INVALID_IMAGE","The image could not be decoded.");
             ImageReader reader=readers.next();
-            try { reader.setInput(stream);long pixels=(long)reader.getWidth(0)*reader.getHeight(0);
+            try {
+                String format=reader.getFormatName().toLowerCase(java.util.Locale.ROOT);
+                if(!List.of("jpeg","jpg","png").contains(format)) throw new ApiException(400,"INVALID_IMAGE","Only JPEG and PNG content is accepted.");
+                reader.setInput(stream);long pixels=(long)reader.getWidth(0)*reader.getHeight(0);
                 if(pixels>24_000_000 || pixels<10000) throw new ApiException(400,"IMAGE_DIMENSIONS","Choose an image between 100 × 100 and 24 megapixels.");
                 decoded=reader.read(0);
             } finally { reader.dispose(); }
+        } catch(IOException e) {
+            throw new ApiException(400,"INVALID_IMAGE","The photograph is damaged or cannot be decoded.");
         }
         Files.createDirectories(root);String name=UUID.randomUUID()+".png";Path target=root.resolve(name);
         ImageIO.write(decoded,"png",target.toFile());String url="/media/"+name;images.add(url);

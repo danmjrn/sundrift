@@ -11,13 +11,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import solutions.shapeit.noirstay.common.Errors;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 /** Same-origin HttpOnly sessions with synchronizer-token CSRF protection on mutations.
  * @author Daniel Jr Nkulu
  */
 @Configuration
 public class SecurityConfig {
+    @Bean org.springframework.security.core.userdetails.UserDetailsService accountDetails(UserRepository users) {
+        return email -> users.findByEmail(email).map(account -> org.springframework.security.core.userdetails.User
+            .withUsername(account.email).password(account.passwordHash).roles(account.role).build())
+            .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException("Invalid login"));
+    }
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(12); }
     @Bean SecurityFilterChain security(HttpSecurity http, ObjectMapper json) throws Exception {
         return http.csrf(csrf -> csrf.csrfTokenRepository(new HttpSessionCsrfTokenRepository())
@@ -37,7 +42,7 @@ public class SecurityConfig {
                     response.setStatus(403); response.setContentType("application/json");
                     json.writeValue(response.getWriter(), Errors.body("FORBIDDEN", "Access denied or CSRF token missing. Refresh and try again."));
                 }))
-            .logout(logout -> logout.logoutUrl("/api/v1/auth/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID")
+            .logout(logout -> logout.logoutUrl("/api/v1/auth/logout").invalidateHttpSession(true).deleteCookies("SESSION", "JSESSIONID")
                 .logoutSuccessHandler((request, response, auth) -> response.setStatus(204)))
             .headers(headers -> headers.contentTypeOptions(content -> { })
                 .frameOptions(frame -> frame.deny()))

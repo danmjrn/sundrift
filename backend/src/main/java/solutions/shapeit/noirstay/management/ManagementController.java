@@ -21,8 +21,15 @@ import solutions.shapeit.noirstay.identity.Identity;
  */
 @RestController
 @RequestMapping("/api/v1")
+@io.swagger.v3.oas.annotations.security.SecurityRequirement(name="session")
 public class ManagementController {
+    /** Validated block request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
     public record Block(@NotNull LocalDate checkIn,@NotNull LocalDate checkOut) { }
+    /** Validated publication request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
     public record Publication(@NotNull String state) { }
     private final ManagementService management;private final Identity identity;
     public ManagementController(ManagementService management,Identity identity) { this.management=management;this.identity=identity; }

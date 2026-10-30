@@ -50,6 +50,13 @@ public class CatalogueService {
         return listing;
     }
     public Map<String,Object> byId(String context,UUID id) { return db.one(SELECT+" WHERE l.context=? AND l.id=?",context,id); }
+    public Map<String,Object> preview(String context,UUID id,LocalDate in,LocalDate out,int guests) {
+        Map<String,Object> listing=byId(context,id);
+        if(!listing.get("state").equals("PUBLISHED")) throw ApiException.missing();
+        pricing.validate(in,out,guests,(int)listing.get("capacity"),(String)listing.get("timezone"));
+        boolean available=!Boolean.TRUE.equals(db.jdbc.queryForObject("SELECT EXISTS(SELECT 1 FROM inventory WHERE listing_id=? AND active AND check_in<? AND check_out>?)",Boolean.class,id,out,in));
+        return Map.of("available",available,"price",pricing.calculate((BigDecimal)listing.get("nightlyRate"),(BigDecimal)listing.get("cleaningFee"),in,out,(String)listing.get("cancellationPolicy")));
+    }
     public List<Map<String,Object>> availability(String context,UUID id) {
         byId(context,id); return db.rows("SELECT check_in,check_out,kind FROM inventory WHERE listing_id=? AND active ORDER BY check_in LIMIT 200",id);
     }

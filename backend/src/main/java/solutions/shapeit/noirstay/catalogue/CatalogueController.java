@@ -32,5 +32,6 @@ public class CatalogueController {
         return catalogue.search(identity.context(auth),destination,checkIn,checkOut,guests,min,max,type,amenities,rating,sort,page);
     }
     @GetMapping("/{slug}") Map<String,Object> detail(Authentication auth,@PathVariable String slug) { return catalogue.detail(identity.context(auth),slug); }
+    @GetMapping("/units/{id}/price") Map<String,Object> price(Authentication auth,@PathVariable UUID id,@RequestParam LocalDate checkIn,@RequestParam LocalDate checkOut,@RequestParam(defaultValue="2") int guests) { return catalogue.preview(identity.context(auth),id,checkIn,checkOut,guests); }
     @GetMapping("/units/{id}/availability") List<Map<String,Object>> availability(Authentication auth,@PathVariable UUID id) { return catalogue.availability(identity.context(auth),id); }
 }

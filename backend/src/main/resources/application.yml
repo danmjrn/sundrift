@@ -15,6 +15,9 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/noirstay}
     username: ${DATABASE_USER:noirstay}
     password: ${DATABASE_PASSWORD}
+  session:
+    jdbc:
+      initialize-schema: never
   jpa:
     open-in-view: false
     hibernate:
@@ -45,5 +48,6 @@ springdoc:
     path: /api/v1/docs
 noirstay:
   demo: false
+  demo-contexts-per-hour: ${DEMO_CONTEXTS_PER_HOUR:10}
   media-root: ${MEDIA_ROOT:./.runtime/media}
   reference-date: ${DEMO_REFERENCE_DATE:}

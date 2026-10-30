@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * @author Daniel Jr Nkulu
  */
 @Component
+@org.springframework.core.annotation.Order(org.springframework.core.Ordered.HIGHEST_PRECEDENCE)
 public class RequestTrace extends OncePerRequestFilter {
     private static final Logger LOG = LoggerFactory.getLogger(RequestTrace.class);
     @Override protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

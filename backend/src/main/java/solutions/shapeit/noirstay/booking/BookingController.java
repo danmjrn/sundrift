@@ -23,15 +23,25 @@ import solutions.shapeit.noirstay.identity.Identity;
  */
 @RestController
 @RequestMapping("/api/v1")
+@io.swagger.v3.oas.annotations.security.SecurityRequirement(name="session")
 public class BookingController {
+    /** Validated quote request request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
     public record QuoteRequest(@NotNull UUID listingId,@NotNull LocalDate checkIn,@NotNull LocalDate checkOut,@Min(1) @Max(16) int guests) { }
+    /** Validated hold request request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
     public record HoldRequest(@NotNull UUID quoteId) { }
-    public record ConfirmRequest(@NotNull String scenario) { }
+    /** Validated confirm request request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
+    public record ConfirmRequest(@NotNull String scenario, @jakarta.validation.constraints.AssertTrue boolean policyAccepted) { }
     private final BookingService bookings; private final Identity identity;
     public BookingController(BookingService bookings,Identity identity) { this.bookings=bookings;this.identity=identity; }
     @PostMapping("/quotes") Map<String,Object> quote(Authentication auth,@Valid @RequestBody QuoteRequest input) { return bookings.quote(identity.require(auth),input.listingId(),input.checkIn(),input.checkOut(),input.guests()); }
     @PostMapping("/bookings") Object hold(Authentication auth,@Valid @RequestBody HoldRequest input,@RequestHeader("Idempotency-Key") String key) { return bookings.hold(identity.require(auth),input.quoteId(),key); }
-    @PostMapping("/bookings/{id}/confirm") Object confirm(Authentication auth,@PathVariable UUID id,@Valid @RequestBody ConfirmRequest input,@RequestHeader("Idempotency-Key") String key) { return bookings.confirm(identity.require(auth),id,input.scenario(),key); }
+    @PostMapping("/bookings/{id}/confirm") Object confirm(Authentication auth,@PathVariable UUID id,@Valid @RequestBody ConfirmRequest input,@RequestHeader("Idempotency-Key") String key) { return bookings.confirm(identity.require(auth),id,input.scenario(),key,input.policyAccepted()); }
     @PostMapping("/bookings/{id}/cancel") Object cancel(Authentication auth,@PathVariable UUID id,@RequestHeader("Idempotency-Key") String key) { return bookings.cancel(identity.require(auth),id,key); }
     @GetMapping("/bookings") List<Map<String,Object>> trips(Authentication auth) { return bookings.trips(identity.require(auth)); }
     @GetMapping("/bookings/{id}") Map<String,Object> detail(Authentication auth,@PathVariable UUID id) { return bookings.view(identity.require(auth),id); }

@@ -67,7 +67,8 @@ public class BookingService {
         });
     }
     @Transactional
-    public Object confirm(UserAccount user,UUID bookingId,String scenario,String key) {
+    public Object confirm(UserAccount user,UUID bookingId,String scenario,String key,boolean policyAccepted) {
+        if(!policyAccepted) throw new ApiException(400,"POLICY_REQUIRED","Accept the house rules and cancellation policy before confirming.");
         guest(user);
         if(!List.of("SUCCESS","DECLINE","RETRY").contains(scenario)) throw new ApiException(400,"INVALID_SCENARIO","Choose success, decline or retry.");
         return idempotent(user,"confirm:"+bookingId,key,scenario,() -> {
@@ -76,10 +77,22 @@ public class BookingService {
             String status=(String)booking.get("status");
             if(status.equals("EXPIRED")) return view(user,bookingId);
             if(!status.equals("HOLD")) throw ApiException.conflict("Only an active hold can be confirmed.");
+            Map<String,Object> currentListing=db.one("SELECT * FROM listing WHERE id=?",listingId);
+            String invalidReason=currentListing.get("state").equals("PUBLISHED")?null:"This stay was unpublished before confirmation. Your dates have been released.";
+            if(invalidReason==null) {
+                try { pricing.validate((LocalDate)booking.get("checkIn"),(LocalDate)booking.get("checkOut"),(int)booking.get("guests"),
+                    (int)currentListing.get("capacity"),(String)currentListing.get("timezone")); }
+                catch(ApiException e) { invalidReason="The stay dates or capacity changed before confirmation. Your dates have been released."; }
+            }
+            if(invalidReason!=null) {
+                db.jdbc.update("UPDATE booking SET status='FAILED' WHERE id=?",bookingId);
+                db.jdbc.update("UPDATE inventory SET active=false WHERE booking_id=?",bookingId);
+                Map<String,Object> response=view(user,bookingId);response.put("notice",invalidReason);return response;
+            }
             // The server chooses the simulator result from a documented scenario; no payment status or total is accepted.
             db.jdbc.update("INSERT INTO payment_attempt(id,booking_id,outcome,amount,created_at) VALUES(?,?,?,?,?)",
                 UUID.randomUUID(),bookingId,scenario,booking.get("total"),java.sql.Timestamp.from(clock.instant()));
-            if(scenario.equals("SUCCESS")) db.jdbc.update("UPDATE booking SET status='CONFIRMED',confirmed_at=? WHERE id=?",java.sql.Timestamp.from(clock.instant()),bookingId);
+            if(scenario.equals("SUCCESS")) db.jdbc.update("UPDATE booking SET status='CONFIRMED',policy_accepted_at=?,confirmed_at=? WHERE id=?",java.sql.Timestamp.from(clock.instant()),java.sql.Timestamp.from(clock.instant()),bookingId);
             if(scenario.equals("DECLINE")) {
                 db.jdbc.update("UPDATE booking SET status='FAILED' WHERE id=?",bookingId);
                 db.jdbc.update("UPDATE inventory SET active=false WHERE booking_id=?",bookingId);
@@ -144,11 +157,13 @@ public class BookingService {
         db.one("SELECT id FROM listing WHERE id=? FOR UPDATE",id); expireLocked(id);
     }
     public void expireLocked(UUID id) {
+        // One cutoff prevents a deadline crossed between statements from splitting state and inventory.
+        java.sql.Timestamp cutoff=java.sql.Timestamp.from(clock.instant());
         db.jdbc.update("""
             UPDATE inventory SET active=false WHERE booking_id IN
             (SELECT id FROM booking WHERE listing_id=? AND status='HOLD' AND expires_at<=?)
-            """,id,java.sql.Timestamp.from(clock.instant()));
-        db.jdbc.update("UPDATE booking SET status='EXPIRED' WHERE listing_id=? AND status='HOLD' AND expires_at<=?",id,java.sql.Timestamp.from(clock.instant()));
+            """,id,cutoff);
+        db.jdbc.update("UPDATE booking SET status='EXPIRED' WHERE listing_id=? AND status='HOLD' AND expires_at<=?",id,cutoff);
     }
     private Object idempotent(UserAccount user,String operation,String key,String payload,Supplier<Object> command) {
         if(key==null || !key.matches("[A-Za-z0-9_-]{8,100}")) throw new ApiException(400,"IDEMPOTENCY_KEY","Supply an Idempotency-Key of 8–100 letters, digits, dashes or underscores.");

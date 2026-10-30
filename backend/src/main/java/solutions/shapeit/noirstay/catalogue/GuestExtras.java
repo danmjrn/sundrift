@@ -30,7 +30,11 @@ import solutions.shapeit.noirstay.identity.UserAccount;
  */
 @RestController
 @RequestMapping("/api/v1")
+@io.swagger.v3.oas.annotations.security.SecurityRequirement(name="session")
 public class GuestExtras {
+    /** Validated review input request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
     public record ReviewInput(@Min(1) @Max(5) int rating,@NotBlank @Size(max=1500) String body) { }
     private final Database db; private final Identity identity; private final CatalogueService catalogue;
     private final BookingService bookings; private final Pricing pricing;

@@ -27,12 +27,26 @@ dependencies, MySQL and backend port 3000. Current source contains database cred
 AWS access credential configuration and JWT signing material; these categories require
 revocation/rotation wherever previously used. Values are deliberately omitted here.
 
-GitHub API: `danmjrn/noirstay` returned 404; original repository exists. Git credential
+GitHub API: an anonymous lookup of `danmjrn/noirstay` returned 404; private name collisions
+cannot be ruled out without authentication. The original repository exists. Git credential
 helper returned no authenticated credential. Rename/push/metadata remain unverified.
 
 Baseline: original wrapper was not executable; sandboxed invocation could not download.
 An isolated Gradle 8.14.3 / JDK 21 run reached compileJava and failed in inherited
 Lombok with `JCTree$JCImport.qualid` (Java compiler incompatibility). No original tests passed;
 this is a compatibility baseline, not a claim that the original Java 17 build was tested.
-Selected supported line: Java 21, Spring Boot 3.5.16, Gradle 8.14.3, PostgreSQL 18.6,
+Selected supported line: Java 21, Spring Boot 4.1.2, Gradle 8.14.3, PostgreSQL 18.6,
 Next.js 16.4.3, React 19.3.1, TypeScript 6.0.3, Tailwind 4.3.3 and pnpm 11.12.0.
+
+An additional isolated baseline at c3ad278 used JDK 17 / Gradle 7.6.6 with old credentials
+overridden by placeholders and the MySQL destination restricted to the container loopback.
+Compilation succeeded; the sole contextLoads test failed because no MySQL datasource was
+available (CommunicationsException / ConnectException). No old credential was used and no
+existing database was touched. This is an environment-dependent failing baseline, not a
+claim that the inherited application cannot run when MySQL is provisioned.
+
+GitHub access resolved: SSH authenticated as danmjrn and pushed foundation commit 865880e.
+The signed-in browser owner session verified `noirstay is available`, renamed the existing
+repository, and saved the exact description plus all eight requested topics. SSH remote
+now points to git@github.com:danmjrn/noirstay.git. Remote main remains c3ad278 and the existing
+feature branch remains intact. The old HTTP API credential returned 401; it was not modified.

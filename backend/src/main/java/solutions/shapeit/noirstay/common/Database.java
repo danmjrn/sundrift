@@ -1,7 +1,7 @@
 package solutions.shapeit.noirstay.common;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,12 +18,12 @@ import org.springframework.stereotype.Component;
 public class Database {
     public final JdbcTemplate jdbc;
     private final ObjectMapper mapper;
-    public Database(JdbcTemplate jdbc, ObjectMapper mapper) { this.jdbc=jdbc; this.mapper=mapper; }
+    public Database(JdbcTemplate jdbc, ObjectMapper mapper) { this.jdbc=jdbc; this.mapper=mapper.rebuild().enable(tools.jackson.databind.DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS).build(); }
     public String json(Object value) {
-        try { return mapper.writeValueAsString(value); } catch(JsonProcessingException e) { throw new IllegalStateException(e); }
+        try { return mapper.writeValueAsString(value); } catch(JacksonException e) { throw new IllegalStateException(e); }
     }
     public Object parse(String value) {
-        try { return mapper.readValue(value,Object.class); } catch(JsonProcessingException e) { throw new IllegalStateException(e); }
+        try { return mapper.readValue(value,Object.class); } catch(JacksonException e) { throw new IllegalStateException(e); }
     }
     public List<Map<String,Object>> rows(String sql,Object... args) {
         List<Map<String,Object>> result=new ArrayList<>();

@@ -23,7 +23,11 @@ public class Errors {
     @ExceptionHandler(ApiException.class)
     ResponseEntity<?> business(ApiException e) { return ResponseEntity.status(e.status).body(body(e.code, e.getMessage())); }
     @ExceptionHandler({MethodArgumentNotValidException.class, HandlerMethodValidationException.class,
-        HttpMessageNotReadableException.class, IllegalArgumentException.class})
+        HttpMessageNotReadableException.class, IllegalArgumentException.class,
+        org.springframework.web.bind.MissingServletRequestParameterException.class,
+        org.springframework.web.bind.MissingRequestHeaderException.class,
+        org.springframework.web.multipart.support.MissingServletRequestPartException.class,
+        org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class})
     ResponseEntity<?> validation(Exception e) { return ResponseEntity.badRequest().body(body("VALIDATION", "Check the submitted values and date format.")); }
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<?> conflict(DataIntegrityViolationException e) {
@@ -33,4 +37,12 @@ public class Errors {
     ResponseEntity<?> forbidden(AccessDeniedException e) { return ResponseEntity.status(403).body(body("FORBIDDEN", "Access denied.")); }
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     ResponseEntity<?> size(MaxUploadSizeExceededException e) { return ResponseEntity.status(413).body(body("UPLOAD_SIZE", "Images must be 5 MB or smaller.")); }
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    ResponseEntity<?> notFound(Exception e) { return ResponseEntity.status(404).body(body("NOT_FOUND","This API resource is unavailable.")); }
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<?> unexpected(Exception e) {
+        org.slf4j.LoggerFactory.getLogger(Errors.class).error("Unhandled API failure type={} correlationId={}",e.getClass().getSimpleName(),MDC.get("correlationId"));
+        return ResponseEntity.internalServerError().body(body("INTERNAL_ERROR","The service could not complete this request. Please try again."));
+    }
 }
+

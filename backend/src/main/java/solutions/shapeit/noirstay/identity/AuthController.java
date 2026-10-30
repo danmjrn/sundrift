@@ -34,17 +34,27 @@ import solutions.shapeit.noirstay.common.ApiException;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+    /** Validated login request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
     public record Login(@Email @NotBlank String email, @NotBlank @Size(max=72) String password) { }
-    public record Register(@Email @NotBlank String email, @Size(min=10,max=72) String password, @NotBlank @Size(max=100) String name) { }
+    /** Validated register request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
+    public record Register(@Email @NotBlank @Size(max=254) String email, @NotBlank @Size(min=10,max=72) String password, @NotBlank @Size(max=100) String name) { }
+    /** Validated account request fields; the service owns validation and state transitions.
+     * @author Daniel Jr Nkulu
+     */
     public record Account(@NotBlank @Size(max=100) String name) { }
     private final Identity identity;
     private final UserRepository users;
     private final JdbcTemplate db;
     private final PasswordEncoder passwords;
     private final Clock clock;
+    private final org.springframework.beans.factory.ObjectProvider<solutions.shapeit.noirstay.demo.DemoFixtures> demoFixtures;
     private final ConcurrentHashMap<String, long[]> attempts = new ConcurrentHashMap<>();
-    public AuthController(Identity identity, UserRepository users, JdbcTemplate db, PasswordEncoder passwords, Clock clock) {
-        this.identity=identity; this.users=users; this.db=db; this.passwords=passwords; this.clock=clock;
+    public AuthController(Identity identity, UserRepository users, JdbcTemplate db, PasswordEncoder passwords, Clock clock, org.springframework.beans.factory.ObjectProvider<solutions.shapeit.noirstay.demo.DemoFixtures> demoFixtures) {
+        this.identity=identity; this.users=users; this.db=db; this.passwords=passwords; this.clock=clock; this.demoFixtures=demoFixtures;
     }
     @GetMapping("/csrf") Map<String,String> csrf(CsrfToken token) { return Map.of("token", token.getToken(), "headerName", token.getHeaderName()); }
     @GetMapping("/me") Map<String,Object> me(Authentication auth) { return identity.view(identity.require(auth)); }
@@ -55,8 +65,13 @@ public class AuthController {
     @PostMapping("/register") Map<String,Object> register(@Valid @RequestBody Register input, HttpServletRequest req, HttpServletResponse res) {
         throttle(req);
         UUID id=UUID.randomUUID();
-        db.update("INSERT INTO app_user(id,email,display_name,password_hash,role) VALUES(?,?,?,?,'GUEST')", id,
-            input.email().toLowerCase(Locale.ROOT),input.name(),passwords.encode(input.password()));
+        String context=null;
+        var fixtures=demoFixtures.getIfAvailable();
+        if(fixtures!=null) {
+            context="visitor-"+UUID.randomUUID();fixtures.seed(context);req.getSession().setAttribute("demoContext",context);
+        }
+        db.update("INSERT INTO app_user(id,email,display_name,password_hash,role,demo_context) VALUES(?,?,?,?,'GUEST',?)", id,
+            input.email().toLowerCase(Locale.ROOT),input.name(),passwords.encode(input.password()),context);
         UserAccount user=users.findById(id).orElseThrow(); signIn(user,req,res); return identity.view(user);
     }
     @PostMapping("/login") Map<String,Object> login(@Valid @RequestBody Login input, HttpServletRequest req, HttpServletResponse res) {
