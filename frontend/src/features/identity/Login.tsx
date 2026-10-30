@@ -3,11 +3,12 @@ import {useState} from 'react';
 import type {FormEvent} from 'react';
 import Image from 'next/image';
 import {api} from '@/lib/api';
+import {safeReturnPath} from '@/lib/return-path';
 import {useAuth} from '@/components/AuthProvider';
 import {Icon} from '@/components/Icon';
 export function Login({next}:{next:string}){
  const {demo}=useAuth();const [register,setRegister]=useState(false),[busy,setBusy]=useState(''),[error,setError]=useState('');
- const target=next.startsWith('/')&&!next.startsWith('//')?next:'/';
+ const target=safeReturnPath(next);
  async function entry(role:string){setBusy(role);setError('');try{await api('/demo/enter',{method:'POST',body:JSON.stringify({role})});window.location.assign(target==='/'?(role==='HOST'?'/host':role==='ADMIN'?'/admin':'/'):target);}catch(e){setError((e as Error).message);setBusy('');}}
  async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();setBusy('form');setError('');const form=new FormData(e.currentTarget);try{await api(register?'/auth/register':'/auth/login',{method:'POST',body:JSON.stringify({email:form.get('email'),password:form.get('password'),...(register?{name:form.get('name')}:{})})});window.location.assign(target);}catch(e){setError((e as Error).message);setBusy('');}}
  return <div className="auth-layout wrap page-pad"><div className="auth-visual"><Image src="/images/stay-07.jpg" alt="Sunlit interior with considered natural textures" fill sizes="50vw"/><div><p className="eyebrow">Make yourself at home</p><h1>Your next chapter<br/>starts somewhere.</h1></div></div><section className="auth-form"><p className="eyebrow">Your space at NoirStay</p><h2>{register?'A good place to begin.':'Welcome back.'}</h2><p className="muted">{register?'Create your account and find your somewhere.':'A little closer to your next escape.'}</p>{demo&&<div className="demo-entry"><h3>Take a look around.</h3><p>One private demo, three perspectives. No password needed. Your reservations stay with you as you switch roles.</p><div className="demo-buttons">{['GUEST','HOST','ADMIN'].map(role=><button key={role} className="button secondary" disabled={!!busy} onClick={()=>entry(role)}>{busy===role?'Preparing…':`Demo ${role.toLowerCase()}`}<Icon name="arrow" size={15}/></button>)}</div><small>Fictional content · Simulated payments · No emails</small></div>}

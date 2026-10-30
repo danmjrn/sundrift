@@ -24,8 +24,8 @@ test('guest search, wishlist, persisted checkout, host reservation and cancellat
 test('host listing creation, real image upload, admin publication and audit',async({page},testInfo)=>{
  await demo(page,'host','/host/listings/new');const title='The browser test cabin '+Date.now();
  await page.getByRole('main').getByLabel('Stay title',{exact:true}).filter({visible:true}).fill(title);await page.getByRole('main').getByLabel('The story of your stay',{exact:true}).filter({visible:true}).fill('A fictional cabin created through the real host workflow.');await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect(page.getByRole('main').getByText(/Draft saved/)).toBeVisible();
- await page.getByRole('main').getByLabel('Add a photograph',{exact:true}).filter({visible:true}).setInputFiles('public/images/stay-02.jpg');await page.getByRole('button',{name:'Upload photograph'}).click();await expect(page.getByRole('main').getByText('Photograph uploaded and saved.')).toBeVisible();await page.getByRole('button',{name:'Submit for publication'}).click();await expect(page.getByRole('main').getByText(/Submitted for administrator review/)).toBeVisible();
- await demo(page,'admin','/admin');await page.screenshot({path:`../docs/screenshots/admin-${testInfo.project.name}.png`,fullPage:true,scale:'css'});const row=page.getByRole('row').filter({has:page.getByRole('cell',{name:title,exact:true})});await row.getByRole('button',{name:'Approve & publish'}).click();await expect(row.getByRole('cell',{name:'published',exact:true})).toBeVisible();
+ await page.getByRole('main').getByLabel('Add a photograph',{exact:true}).filter({visible:true}).setInputFiles('public/images/stay-02.jpg');await page.getByRole('button',{name:'Upload photograph'}).click();await expect(page.getByRole('main').getByText('Photograph uploaded and saved.')).toBeVisible();await page.getByRole('button',{name:'Remove photograph 1',exact:true}).click();await expect(page.getByRole('main').getByText('Photograph removed. The stay is a draft until a new photograph is published.')).toBeVisible();await page.getByRole('button',{name:'Upload photograph'}).click();await expect(page.getByRole('main').getByText('Photograph uploaded and saved.')).toBeVisible();await page.getByRole('button',{name:'Submit for publication'}).click();await expect(page.getByRole('main').getByText(/Submitted for administrator review/)).toBeVisible();
+ await demo(page,'admin','/admin');await page.screenshot({path:`../docs/screenshots/admin-${testInfo.project.name}.png`,fullPage:true,scale:'css'});const row=page.getByRole('row').filter({has:page.getByRole('cell',{name:title,exact:true})});await row.getByText('Review stay',{exact:true}).click();await expect(row.getByText('A fictional cabin created through the real host workflow.',{exact:true})).toBeVisible();await row.getByRole('button',{name:'Approve & publish'}).click();await expect(row.getByRole('cell',{name:'published',exact:true})).toBeVisible();
  await row.getByRole('button',{name:'Unpublish',exact:true}).click();await expect(row.getByRole('cell',{name:'unpublished',exact:true})).toBeVisible();await page.getByRole('button',{name:'Audit',exact:true}).click();await expect(page.getByRole('cell',{name:'unpublished',exact:true})).toBeVisible();
 });
 test('protected routes, keyboard navigation, error state and narrow layout',async({page},testInfo)=>{
@@ -34,4 +34,18 @@ test('protected routes, keyboard navigation, error state and narrow layout',asyn
  await expect(page.locator('body')).toHaveJSProperty('scrollWidth',await page.locator('body').evaluate(x=>x.clientWidth));
  await page.goto('/search?destination=NoSuchPlace');await expect(page.getByRole('heading',{name:'A different somewhere?'})).toBeVisible();
  await page.goto('/search?checkIn=2020-01-01&checkOut=2020-01-03');await expect(page.getByRole('main').getByText(/Choose 1–30 nights/)).toBeVisible();
+});
+
+test('registration, persisted account editing, logout and password login retain the correct demo context',async({page})=>{
+ const email='registered-'+Date.now()+'@demo.invalid';const password='synthetic-noirstay-password';
+ await page.goto('/login');await page.getByRole('button',{name:'New here? Create an account',exact:true}).click();
+ await page.getByRole('main').getByLabel('Your name',{exact:true}).filter({visible:true}).fill('Registered demo guest');
+ await page.getByRole('main').getByLabel('Email address',{exact:true}).filter({visible:true}).fill(email);
+ await page.getByRole('main').getByLabel('Password',{exact:true}).filter({visible:true}).fill(password);
+ await page.getByRole('button',{name:'Create account',exact:true}).click();await expect(page).not.toHaveURL(/\/login/);
+ await page.goto('/account');await page.getByRole('main').getByLabel('Your name',{exact:true}).filter({visible:true}).fill('A new demo name');await page.getByRole('button',{name:'Save details',exact:true}).click();await expect(page.getByRole('main').getByText('Your account details have been saved.')).toBeVisible();await page.reload();await expect(page.getByRole('main').getByLabel('Your name',{exact:true}).filter({visible:true})).toHaveValue('A new demo name');
+ const catalogue=await (await page.request.get('/api/v1/catalogue')).json();const unit=catalogue.items[0].id;
+ await page.getByRole('button',{name:'Sign out',exact:true}).click();await expect(page).toHaveURL(/\/$/);
+ await page.goto('/login?next=/search');await page.getByRole('main').getByLabel('Email address',{exact:true}).filter({visible:true}).fill(email);await page.getByRole('main').getByLabel('Password',{exact:true}).filter({visible:true}).fill(password);await page.getByRole('button',{name:'Sign in',exact:true}).click();await expect(page).toHaveURL(/\/search$/);
+ await demo(page,'host','/host');const host=await (await page.request.get('/api/v1/host')).json();expect(host.listings.map((l:{id:string})=>l.id)).toContain(unit);
 });

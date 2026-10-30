@@ -70,6 +70,8 @@ class ReservationIntegrationTest {
     @TestConfiguration static class TimeConfig { @Bean @Primary MutableClock testClock(){return new MutableClock();} }
     @Autowired BookingService bookings;@Autowired ManagementService management;@Autowired CatalogueService catalogue;
     @Autowired DemoFixtures fixtures;@Autowired UserRepository users;@Autowired Database db;@Autowired MockMvc mvc;
+    @Autowired solutions.shapeit.noirstay.identity.RegistrationService registration;
+    @Autowired org.springframework.security.crypto.password.PasswordEncoder passwords;
     @Autowired MutableClock clock;@Autowired TransactionTemplate transactions;
     UserAccount guest,other,host,admin;UUID listing;String context;
     final LocalDate in=LocalDate.parse("2026-11-06"),out=LocalDate.parse("2026-11-09");
@@ -234,9 +236,35 @@ class ReservationIntegrationTest {
         @SuppressWarnings("unchecked") var uploaded=(Map<String,Object>)db.parse(result.getResponse().getContentAsString());
         assertThat(uploaded.get("url").toString()).matches("/media/[a-f0-9-]{36}\\.png");
         mvc.perform(get(uploaded.get("url").toString())).andExpect(status().isOk());
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/v1/host/listings/"+listing+"/images")
+            .with(user(host.email).roles("HOST")).with(csrf()).contentType("application/json")
+            .content(db.json(Map.of("url",uploaded.get("url"))))).andExpect(status().isOk());
+        assertThat(db.one("SELECT images FROM listing WHERE id=?",listing).get("images").toString()).doesNotContain(uploaded.get("url").toString());
+        // Reference removal preserves the underlying file for historical links and controlled cleanup.
+        mvc.perform(get(uploaded.get("url").toString())).andExpect(status().isOk());
         var fake=new org.springframework.mock.web.MockMultipartFile("file","fake.png","image/png","not an image".getBytes(java.nio.charset.StandardCharsets.UTF_8));
         mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart("/api/v1/host/listings/"+listing+"/images")
             .file(fake).with(user(host.email).roles("HOST")).with(csrf())).andExpect(status().isBadRequest());
+    }
+    @Test void loginRestoresAccountsOwnContextInsteadOfAStaleSessionContext() {
+        var request=new org.springframework.mock.web.MockHttpServletRequest();
+        request.getSession().setAttribute("demoContext","a-previous-context");
+        String originalSession=request.getSession().getId();
+        solutions.shapeit.noirstay.identity.AuthController.signIn(guest,request,new org.springframework.mock.web.MockHttpServletResponse());
+        assertThat(request.getSession().getAttribute("demoContext")).isEqualTo(context);
+        assertThat(request.getSession().getId()).isNotEqualTo(originalSession);
+        org.springframework.security.core.context.SecurityContextHolder.clearContext();
+    }
+    @Test void registrationHashesPasswordsAndRollsBackDuplicateContextCreation() {
+        String email=UUID.randomUUID()+"@registration.demo.invalid";
+        UserAccount created=registration.register(email,"synthetic-test-password","Registered demo guest");
+        assertThat(created.role).isEqualTo("GUEST");assertThat(created.demoContext).isNotNull();
+        assertThat(passwords.matches("synthetic-test-password",created.passwordHash)).isTrue();
+        assertThat(db.jdbc.queryForObject("SELECT count(*) FROM listing WHERE context=?",Integer.class,created.demoContext)).isEqualTo(24);
+        int before=db.jdbc.queryForObject("SELECT count(*) FROM demo_context",Integer.class);
+        assertThatThrownBy(()->registration.register(email,"another-synthetic-password","Duplicate"))
+            .isInstanceOf(DataIntegrityViolationException.class);
+        assertThat(db.jdbc.queryForObject("SELECT count(*) FROM demo_context",Integer.class)).isEqualTo(before);
     }
     private String attempt(Runnable work) {try{work.run();return "OK";}catch(ApiException|DataIntegrityViolationException e){return "CONFLICT";}}
     private List<String> race(Callable<String> first,Callable<String> second) throws Exception {

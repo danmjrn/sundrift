@@ -17,3 +17,8 @@ input,select,textarea{display:block;width:100%;color:var(--text);background:#111
 /* Input groups retain a visible boundary on black and raised surfaces. */
 .search-bar,.search-bar>label{border-color:var(--input-border)}
 @media(max-width:600px){.search-bar .search-destination,.search-bar>label:nth-of-type(3),.search-bar .guest-field{border-color:var(--input-border)}input,select,textarea,.search-bar input,.search-bar select,.search-bar input[type=date],.booking-dates input,.filters input,.filters select{font-size:16px}}
+
+.photo-remove{position:absolute;right:6px;top:6px;width:32px;height:32px;border:1px solid #b4b4be;background:#111113;color:#fafafa;border-radius:50%;font-size:22px;line-height:1}.calendar-management .availability-calendar{margin:0 0 25px;max-width:100%}
+
+.gallery.single-photo{grid-template-columns:1fr;grid-template-rows:420px}.gallery.two-photos{grid-template-columns:1fr 1fr;grid-template-rows:420px}.gallery.single-photo>button:first-child,.gallery.two-photos>button:first-child{grid-row:auto}.moderation-details{margin-bottom:12px;min-width:190px;max-width:340px}.moderation-details summary{cursor:pointer;font-size:11px;color:#fafafa;min-height:25px}.moderation-details p{font-size:11px;line-height:1.8;margin-top:12px}.moderation-details .photo-thumbnails>div{width:120px;height:90px}
+@media(max-width:600px){.gallery.single-photo{grid-template-rows:280px}.gallery.two-photos{grid-template-columns:1fr;grid-template-rows:220px 160px}}

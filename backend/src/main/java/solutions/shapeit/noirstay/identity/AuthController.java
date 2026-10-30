@@ -10,9 +10,7 @@ import java.time.Clock;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,31 +46,21 @@ public class AuthController {
     public record Account(@NotBlank @Size(max=100) String name) { }
     private final Identity identity;
     private final UserRepository users;
-    private final JdbcTemplate db;
+    private final RegistrationService registration;
     private final PasswordEncoder passwords;
     private final Clock clock;
-    private final org.springframework.beans.factory.ObjectProvider<solutions.shapeit.noirstay.demo.DemoFixtures> demoFixtures;
     private final ConcurrentHashMap<String, long[]> attempts = new ConcurrentHashMap<>();
-    public AuthController(Identity identity, UserRepository users, JdbcTemplate db, PasswordEncoder passwords, Clock clock, org.springframework.beans.factory.ObjectProvider<solutions.shapeit.noirstay.demo.DemoFixtures> demoFixtures) {
-        this.identity=identity; this.users=users; this.db=db; this.passwords=passwords; this.clock=clock; this.demoFixtures=demoFixtures;
+    public AuthController(Identity identity, UserRepository users, RegistrationService registration, PasswordEncoder passwords, Clock clock) {
+        this.identity=identity; this.users=users; this.registration=registration; this.passwords=passwords; this.clock=clock;
     }
     @GetMapping("/csrf") Map<String,String> csrf(CsrfToken token) { return Map.of("token", token.getToken(), "headerName", token.getHeaderName()); }
     @GetMapping("/me") Map<String,Object> me(Authentication auth) { return identity.view(identity.require(auth)); }
     @PatchMapping("/me") Map<String,Object> update(Authentication auth, @Valid @RequestBody Account input) {
-        UserAccount user=identity.require(auth); db.update("UPDATE app_user SET display_name=? WHERE id=?", input.name(),user.id);
-        user.displayName=input.name(); return identity.view(user);
+        UserAccount user=identity.require(auth); registration.rename(user,input.name()); return identity.view(user);
     }
     @PostMapping("/register") Map<String,Object> register(@Valid @RequestBody Register input, HttpServletRequest req, HttpServletResponse res) {
         throttle(req);
-        UUID id=UUID.randomUUID();
-        String context=null;
-        var fixtures=demoFixtures.getIfAvailable();
-        if(fixtures!=null) {
-            context="visitor-"+UUID.randomUUID();fixtures.seed(context);req.getSession().setAttribute("demoContext",context);
-        }
-        db.update("INSERT INTO app_user(id,email,display_name,password_hash,role,demo_context) VALUES(?,?,?,?,'GUEST',?)", id,
-            input.email().toLowerCase(Locale.ROOT),input.name(),passwords.encode(input.password()),context);
-        UserAccount user=users.findById(id).orElseThrow(); signIn(user,req,res); return identity.view(user);
+        UserAccount user=registration.register(input.email(),input.password(),input.name()); signIn(user,req,res); return identity.view(user);
     }
     @PostMapping("/login") Map<String,Object> login(@Valid @RequestBody Login input, HttpServletRequest req, HttpServletResponse res) {
         throttle(req);
@@ -89,6 +77,9 @@ public class AuthController {
     }
     public static void signIn(UserAccount user,HttpServletRequest req,HttpServletResponse res) {
         req.getSession(); req.changeSessionId();
+        // Restore the account's own context on re-login, including before a demo role switch.
+        if(user.demoContext!=null) req.getSession().setAttribute("demoContext",user.demoContext);
+        else req.getSession().removeAttribute("demoContext");
         var context=SecurityContextHolder.createEmptyContext();
         context.setAuthentication(new UsernamePasswordAuthenticationToken(user.email,null,List.of(new SimpleGrantedAuthority("ROLE_"+user.role))));
         SecurityContextHolder.setContext(context);

@@ -23,4 +23,19 @@ public class OpenApiConfig {
             .components(new Components().addSecuritySchemes("session",new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.COOKIE).name("SESSION"))
                 .addSecuritySchemes("csrf",new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.HEADER).name("X-CSRF-TOKEN")));
     }
+    @Bean org.springdoc.core.customizers.OpenApiCustomizer securityContracts() {
+        return api -> api.getPaths().forEach((path,item) -> item.readOperationsMap().forEach((method,operation) -> {
+            boolean mutation=method!=io.swagger.v3.oas.models.PathItem.HttpMethod.GET
+                && method!=io.swagger.v3.oas.models.PathItem.HttpMethod.HEAD
+                && method!=io.swagger.v3.oas.models.PathItem.HttpMethod.OPTIONS;
+            boolean publicRoute=path.startsWith("/api/v1/catalogue") || path.startsWith("/media/")
+                || List.of("/api/v1/auth/csrf","/api/v1/auth/login","/api/v1/auth/register","/api/v1/auth/logout",
+                    "/api/v1/demo/status","/api/v1/demo/enter").contains(path);
+            var requirement=new io.swagger.v3.oas.models.security.SecurityRequirement();
+            if(!publicRoute) requirement.addList("session");
+            if(mutation) requirement.addList("csrf");
+            operation.setSecurity(requirement.isEmpty()?List.of():List.of(requirement));
+        }));
+    }
+
 }

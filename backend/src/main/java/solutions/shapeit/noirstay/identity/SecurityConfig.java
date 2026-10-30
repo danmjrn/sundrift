@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/api/v1/catalogue/**", "/api/v1/auth/csrf", "/api/v1/demo/status",
-                    "/api/v1/openapi/**", "/api/v1/docs/**", "/swagger-ui/**", "/actuator/health/**", "/media/**").permitAll()
+                    "/api/v1/openapi/**", "/api/v1/docs/**", "/api/v1/swagger-ui/**", "/swagger-ui/**", "/actuator/health/**", "/media/**").permitAll()
                 .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register", "/api/v1/demo/enter").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/host/**").hasRole("HOST")

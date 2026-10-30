@@ -43,4 +43,12 @@ class NormalStartupIntegrationTest {
         mvc.perform(post("/api/v1/auth/register").with(csrf()).contentType("application/json").content("{\"email\":\"test@example.invalid\",\"password\":null,\"name\":\"Test\"}")).andExpect(status().isBadRequest());
         mvc.perform(post("/api/v1/auth/register").with(csrf()).contentType("application/json").content("{\"email\":\"test@example.invalid\",\"password\":\"long-enough-password\",\"name\":\"Test\",\"role\":\"ADMIN\"}")).andExpect(status().isBadRequest());
     }
+    @Test void documentationIsPublicAndDescribesCookieAndCsrfRequirements() throws Exception {
+        mvc.perform(get("/api/v1/swagger-ui/index.html")).andExpect(status().isOk());
+        mvc.perform(get("/api/v1/openapi")).andExpect(status().isOk())
+            .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.info.title").value("NoirStay API"))
+            .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.paths['/api/v1/bookings'].post.security[0].session").isArray())
+            .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath("$.paths['/api/v1/bookings'].post.security[0].csrf").isArray());
+    }
+
 }
