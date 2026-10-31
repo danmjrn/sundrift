@@ -16,7 +16,7 @@ on 30–31 October 2026. Dependencies are stable releases; the pnpm lockfile is 
 | TypeScript | 6.0.3 | Strict checks; compatible with selected lint/tooling |
 | Tailwind | 4.3.3 | PostCSS integration, shared CSS design tokens |
 | pnpm | 11.12.0 | Explicit packageManager and committed lockfile |
-| Node | 24.13.1 Docker; 22/24 supported locally | Next.js-compatible LTS lines |
+| Node | 24.22.2 Docker; 22/24 supported locally | Next.js-compatible LTS lines |
 | ESLint | 10.13.0 | Maintained core, compatible Next/TypeScript/hooks rules |
 | Vitest | 4.1.12 | Focused formatting/date contracts |
 | Playwright | 1.64.1 | Real desktop/phone Chromium journeys |
@@ -34,3 +34,5 @@ A final support audit corrected the initial 3.5 selection: its final OSS release
 [announced on 25 June 2026](https://spring.io/blog/2026/06/25/spring-boot-3-5-16-available-now/).
 The delivered backend uses supported Spring Boot 4.1.2 with Springdoc 3.2.0, Jackson 3 and
 Testcontainers 2.0.5. No commercial support subscription is required.
+
+Sundrift launch updates the container runtime to [Node 24.22.2 LTS](https://nodejs.org/en/blog/release/v24.22.2).

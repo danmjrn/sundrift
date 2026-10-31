@@ -1,4 +1,4 @@
-FROM node:24.13.1-alpine AS build
+FROM node:24.22.2-alpine AS build
 WORKDIR /app
 RUN npm install -g pnpm@11.12.0
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -8,7 +8,7 @@ ARG API_INTERNAL_URL=http://backend:8080
 ENV API_INTERNAL_URL=$API_INTERNAL_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
-FROM node:24.13.1-alpine
+FROM node:24.22.2-alpine
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 COPY --from=build --chown=node:node /app/.next/standalone ./
