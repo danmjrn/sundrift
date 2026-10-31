@@ -1,7 +1,8 @@
 # Local setup, deployment and rollback
 
-No remote target was supplied; no VPS or unrelated live service was changed.
-The release is packaged as Docker Compose services for a single VPS.
+Sundrift runs at https://sundrift.shapeit.solutions/ as an isolated Docker Compose stack.
+Local setup is below; the verified VPS, encrypted backups and rollback guidance follow.
+Only the new application route was added to the shared host; existing peer routes were preserved.
 
 ## Fresh checkout
 
@@ -27,7 +28,7 @@ operational controls. This release is designed as a synthetic portfolio demonstr
 
 ## Separate development commands
 
-Install Java 21, Node 22/24 and pnpm 11.12.0. Start just PostgreSQL with loopback access:
+Install Java 21, Node 24 and pnpm 11.12.0. Start just PostgreSQL with loopback access:
 
 ```sh
 docker compose -f compose.yml -f infrastructure/development.yml up -d --wait database
@@ -144,8 +145,7 @@ for this release. Do not delete active contexts as part of routine startup.
 ## Verified Sundrift VPS deployment
 
 The owner authorized this target on 31 October 2026: https://sundrift.shapeit.solutions/.
-The deployed source and live acceptance are recorded in LAUNCH_VERIFICATION.md. Earlier
-absence-of-target notes describe the initial local-only delivery, not the current status.
+The deployed source and live acceptance are recorded in LAUNCH_VERIFICATION.md. The historical verification report describes the earlier local-only delivery.
 
 Production uses compose.yml plus infrastructure/production.yml, private runtime configuration
 at /opt/sundrift/shared/runtime.env, loopback ingress 127.0.0.1:3110 and the host TLS edge.

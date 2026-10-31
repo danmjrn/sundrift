@@ -9,5 +9,6 @@ Existing local data volumes and database identifiers are explicitly retained thr
 .env overrides. Fresh installations use sundrift names. Sessions store Spring security
 types rather than renamed project-owned classes.
 
-Target: https://sundrift.shapeit.solutions, isolated from the company application and all
-other deployed projects. Publication is recorded only after DNS, TLS and journeys verify.
+Live: https://sundrift.shapeit.solutions, isolated from the company application and all
+other deployed projects. DNS, TLS and all 11 live browser checks passed. The real screenshots
+and [launch report](LAUNCH_VERIFICATION.md) record the delivered application.
