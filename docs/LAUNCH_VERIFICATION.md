@@ -60,9 +60,13 @@ HTTPS project link and public repository link were verified in the rendered site
 Backup `20261031T010959Z` was authenticated/decrypted and restored into a disposable,
 network-isolated PostgreSQL container using the same database image. Its confirmed booking
 and referenced media were verified; the labelled rehearsal container and scratch files were
-removed. Applied migrations were not reversed or existing app data reset. Daily backup unit
-files and an explicit code/image rollback action are included; a live rollback round trip
-was not performed. Recovery keys stay outside Git.
+removed. Applied migrations were not reversed or existing app data reset. The owner then
+explicitly authorized the daily backup timer and local encrypted recovery copy. The timer is
+enabled/active for 05:30 SAST with up to five minutes of jitter; its first service run succeeded.
+Backup `20261031T012511Z`, encrypted runtime configuration and public recovery receipts were
+copied to ignored `.runtime/recovery/` (directory 0700, files 0600); ciphertext SHA-256 receipts
+were verified. Recovery identities remain outside Git. An explicit code/image rollback action
+is included; a live rollback round trip was not performed.
 
 ## Honest limits
 
@@ -76,11 +80,13 @@ passed without relaxing dependency checks. The first recovery fixture observed P
 temporary initialization socket; waiting for final TCP readiness corrected the fixture.
 
 The public GitGuardian PR alert refers to the required environment-variable expression on
-historical compose.yml line 8 (`7736ec3`), not a literal password. That classification was
-verified from public Git source. The user authorized review of that specific private incident. The dashboard requires a new
-GitHub OAuth authorization (identity, email read and acting on behalf), which is awaiting a
-separate decision. No scanner, branch protection or historical secret was silently waived. Previously committed
-legacy credentials still require rotation wherever active.
+historical compose.yml line 8 (`7736ec3`), not a literal password. Public Git source and the
+specific private incident were reviewed. The owner explicitly approved both that review and
+the GitHub authorization needed to sign in. The dashboard lists two Sundrift occurrences and
+**zero Sundrift files requiring a code fix**. The incident also groups locations outside this
+application, so its global Triggered status was left unchanged. No scanner, branch protection
+or historical secret was waived. Previously committed legacy credentials still require
+rotation wherever active.
 
 This remains a synthetic, single-instance portfolio system: one unit per listing, flat ZAR
 rates, simulated payments/email and operator-managed context/media retention. No load benchmark,

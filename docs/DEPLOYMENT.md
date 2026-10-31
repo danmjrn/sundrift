@@ -164,7 +164,11 @@ Backups encrypt PostgreSQL custom dumps and immutable media with app-specific ho
 recovery recipients. The owner recovery identity is local under ignored .runtime/, mode0600;
 the host identity remains private under /opt/sundrift/shared/. The recovery rehearsal restored
 the encrypted database and referenced photographs without networking. ops/sundrift-backup.*
-provide a daily 05:30 SAST schedule with up to five minutes of jitter. Retention is operator
+provide the enabled daily 05:30 SAST schedule with up to five minutes of jitter. The owner
+explicitly authorized the timer and the private local ciphertext copy under
+.runtime/recovery/ (0700 directory, 0600 files). The first service run succeeded and copied
+ciphertext hashes matched the server receipts. The recovery identity is separate at
+.runtime/sundrift-recovery-age.txt; keep it protected and outside Git. Retention is operator
 managed; these units do not delete old data.
 
 For an operator-controlled rollback, invoke the deployed ops/vps_release.py rollback action:
