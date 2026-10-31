@@ -1,0 +1,7 @@
+'use client';
+import {useState} from 'react';
+import Link from 'next/link';
+import type {Booking} from '@/lib/types';
+import {today,date,money} from '@/lib/format';
+import {Empty} from '@/components/States';
+export function Trips({bookings}:{bookings:Booking[]}){const [tab,setTab]=useState('Upcoming');const visible=bookings.filter(b=>tab==='Cancelled'?['CANCELLED','FAILED','EXPIRED'].includes(b.status):tab==='Completed'?b.status==='CONFIRMED'&&b.checkOut<=today():['CONFIRMED','HOLD'].includes(b.status)&&b.checkOut>today());return <><div className="tabs" role="tablist" aria-label="Trip status">{['Upcoming','Completed','Cancelled'].map(t=><button key={t} role="tab" aria-selected={t===tab} onClick={()=>setTab(t)} className={t===tab?'active':''}>{t}</button>)}</div>{visible.length?<div className="trip-list">{visible.map(b=><Link key={b.id} href={'/trips/'+b.id} className="trip-row"><div><span className={'status '+b.status.toLowerCase()}>{b.status==='HOLD'?'Awaiting confirmation':b.status.toLowerCase()}</span><h2>{b.snapshot.listingTitle}</h2><p>{b.snapshot.destination} · {date(b.checkIn)} — {date(b.checkOut)}</p></div><div><strong>{money(b.total)}</strong><p className="small muted">{b.reference} →</p></div></Link>)}</div>:<Empty title={tab==='Upcoming'?'A little space for possibility.':`No ${tab.toLowerCase()} trips yet.`} href="/search">Your next memorable stay is out there.</Empty>}</>;}

@@ -1,0 +1,19 @@
+# The app edge is loopback-only behind the host's TLS Nginx. Only that trusted
+# proxy supplies forwarded headers; the local/public Compose edge strips them.
+services:
+  database:
+    mem_limit: 768m
+    cpus: 1.0
+  backend:
+    image: sundrift-backend:${SOURCE_REVISION:?Exact source revision required}
+    mem_limit: 768m
+    cpus: 1.5
+  frontend:
+    image: sundrift-frontend:${SOURCE_REVISION:?Exact source revision required}
+    mem_limit: 512m
+    cpus: 1.5
+  edge:
+    mem_limit: 64m
+    cpus: 0.5
+    volumes:
+      - ./infrastructure/nginx.production.conf:/etc/nginx/nginx.conf:ro

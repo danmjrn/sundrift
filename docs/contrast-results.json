@@ -1,0 +1,170 @@
+[
+  {
+    "viewport": "desktop",
+    "component": "search input group boundary",
+    "foreground": "rgb(151, 116, 94)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 4.034136745002097,
+    "minimum": 3
+  },
+  {
+    "viewport": "desktop",
+    "component": "search input text",
+    "foreground": "rgb(98, 70, 51)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 8.215635244996294,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "desktop",
+    "component": "search placeholder",
+    "foreground": "rgb(117, 86, 68)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 6.3300693991752075,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "desktop",
+    "component": "booking input text",
+    "foreground": "rgb(57, 39, 30)",
+    "background": "rgb(237, 223, 208)",
+    "ratio": 10.834514411158443,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "desktop",
+    "component": "booking input boundary",
+    "foreground": "rgb(151, 116, 94)",
+    "background": "rgb(237, 223, 208)",
+    "ratio": 3.2290842034221456,
+    "minimum": 3
+  },
+  {
+    "viewport": "desktop",
+    "component": "disabled control text",
+    "foreground": "rgb(98, 70, 51)",
+    "background": "rgb(224, 205, 188)",
+    "ratio": 5.57799212379684,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "desktop",
+    "component": "keyboard focus outline",
+    "foreground": "rgb(112, 71, 47)",
+    "background": "rgb(246, 238, 228)",
+    "ratio": 6.942852323870618,
+    "minimum": 3
+  },
+  {
+    "viewport": "tablet",
+    "component": "search input group boundary",
+    "foreground": "rgb(151, 116, 94)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 4.034136745002097,
+    "minimum": 3
+  },
+  {
+    "viewport": "tablet",
+    "component": "search input text",
+    "foreground": "rgb(98, 70, 51)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 8.215635244996294,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "tablet",
+    "component": "search placeholder",
+    "foreground": "rgb(117, 86, 68)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 6.3300693991752075,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "tablet",
+    "component": "booking input text",
+    "foreground": "rgb(57, 39, 30)",
+    "background": "rgb(237, 223, 208)",
+    "ratio": 10.834514411158443,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "tablet",
+    "component": "booking input boundary",
+    "foreground": "rgb(151, 116, 94)",
+    "background": "rgb(237, 223, 208)",
+    "ratio": 3.2290842034221456,
+    "minimum": 3
+  },
+  {
+    "viewport": "tablet",
+    "component": "disabled control text",
+    "foreground": "rgb(98, 70, 51)",
+    "background": "rgb(224, 205, 188)",
+    "ratio": 5.57799212379684,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "tablet",
+    "component": "keyboard focus outline",
+    "foreground": "rgb(112, 71, 47)",
+    "background": "rgb(246, 238, 228)",
+    "ratio": 6.942852323870618,
+    "minimum": 3
+  },
+  {
+    "viewport": "phone",
+    "component": "search input group boundary",
+    "foreground": "rgb(151, 116, 94)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 4.034136745002097,
+    "minimum": 3
+  },
+  {
+    "viewport": "phone",
+    "component": "search input text",
+    "foreground": "rgb(98, 70, 51)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 8.215635244996294,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "phone",
+    "component": "search placeholder",
+    "foreground": "rgb(117, 86, 68)",
+    "background": "rgb(255, 249, 241)",
+    "ratio": 6.3300693991752075,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "phone",
+    "component": "booking input text",
+    "foreground": "rgb(57, 39, 30)",
+    "background": "rgb(237, 223, 208)",
+    "ratio": 10.834514411158443,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "phone",
+    "component": "booking input boundary",
+    "foreground": "rgb(151, 116, 94)",
+    "background": "rgb(237, 223, 208)",
+    "ratio": 3.2290842034221456,
+    "minimum": 3
+  },
+  {
+    "viewport": "phone",
+    "component": "disabled control text",
+    "foreground": "rgb(98, 70, 51)",
+    "background": "rgb(224, 205, 188)",
+    "ratio": 5.57799212379684,
+    "minimum": 4.5
+  },
+  {
+    "viewport": "phone",
+    "component": "keyboard focus outline",
+    "foreground": "rgb(112, 71, 47)",
+    "background": "rgb(246, 238, 228)",
+    "ratio": 6.942852323870618,
+    "minimum": 3
+  }
+]

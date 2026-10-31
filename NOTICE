@@ -1,0 +1,11 @@
+Sundrift — Find somewhere worth staying.
+New implementation and portfolio work: Daniel Jr Nkulu, Shape It Solutions.
+
+Derived from danmjrn/springboot-booking-system, original commit c3ad278
+("Initial commit"), with original namespace com.samantha.bookingsystem.
+Original source and history remain in Git. No authorship or licensing notice was
+removed from inherited source. The inherited checkout contained no licence file;
+this notice does not grant a new licence to that source.
+
+Photographs are illustrative Unsplash assets, not representations of actual
+bookable properties. See docs/ASSETS.md for sources and licence information.
