@@ -50,3 +50,13 @@ test('registration, persisted account editing, logout and password login retain 
  await page.goto('/login?next=/search');await page.getByRole('main').getByLabel('Email address',{exact:true}).filter({visible:true}).fill(email);await page.getByRole('main').getByLabel('Password',{exact:true}).filter({visible:true}).fill(password);await page.getByRole('button',{name:'Sign in',exact:true}).click();await expect(page).toHaveURL(url=>url.pathname==='/search');
  await demo(page,'host','/host');const host=await (await page.request.get('/api/v1/host')).json();expect(host.listings.map((l:{id:string})=>l.id)).toContain(unit);
 });
+
+test('saved stays wait for authenticated account loading before accepting a click',async({page})=>{
+ await demo(page,'guest','/search');await expect(page.getByRole('navigation',{name:'Account navigation',exact:true})).toBeVisible();
+ let releaseAuth:()=>void=()=>{};const gate=new Promise<void>(resolve=>{releaseAuth=resolve;});
+ await page.route('**/api/v1/auth/me',async route=>{await gate;await route.continue();});
+ try {
+  await page.goto('/search');const card=page.getByRole('main').locator('.stay-card').filter({visible:true}).first();const save=card.getByRole('button',{name:/^Save /});
+  await expect(save).toBeDisabled();releaseAuth();await expect(save).toBeEnabled();await save.click();await expect(card.getByRole('button',{name:/^Unsave /})).toBeVisible();
+ } finally {releaseAuth();}
+});

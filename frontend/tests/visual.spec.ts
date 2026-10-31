@@ -10,6 +10,7 @@ test('responsive real screenshots, image loading, accessible catalogue and calen
  for(const size of sizes){
   await page.setViewportSize(size);await page.goto('/');await page.getByRole('main').locator('.hero-image img').filter({visible:true}).evaluate(async(image:HTMLImageElement)=>{if(!image.complete)await new Promise(resolve=>image.addEventListener('load',resolve,{once:true}));});
   expect(await page.getByRole('main').locator('.hero-image img').filter({visible:true}).evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
+  await page.getByRole('main').locator('img').evaluateAll(async images=>{await Promise.all(images.filter(image=>{const r=image.getBoundingClientRect();return r.top<innerHeight&&r.bottom>0;}).map(image=>(image as HTMLImageElement).decode()));});
   await expect(page.locator('body')).toHaveJSProperty('scrollWidth',size.width);
   await page.screenshot({path:`../docs/screenshots/home-${size.name}-viewport.png`,scale:'css'});
   const group=await page.getByRole('main').locator('.search-bar').filter({visible:true}).evaluate(el=>{const s=getComputedStyle(el);return {background:s.backgroundColor,border:s.borderTopColor};});
