@@ -168,3 +168,11 @@ Significant publication changes create audit records. Safe health/readiness endp
 expose no configuration. Structured request logs contain method, status, duration and a
 server-generated correlation ID, never cookies, request bodies, passwords or personal data.
 The edge hides health endpoints from public routing.
+
+
+## Schema and brand compatibility
+
+Flyway V1–V4 remain byte-for-byte unchanged after their original application. V5 changes
+only old brand text in synthetic, non-live listing contexts; it does not recreate the schema
+or alter agreed booking snapshots. Existing local volumes remain available under their
+original names; the fresh VPS uses separate Sundrift volumes. See [rebrand notes](REBRAND.md).

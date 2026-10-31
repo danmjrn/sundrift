@@ -1,4 +1,7 @@
-# Verification evidence
+# Historical implementation verification
+
+This report records the original NoirStay delivery before the Sundrift rebrand.
+Current public deployment and fresh verification: [Sundrift launch](LAUNCH_VERIFICATION.md).
 
 Verified locally on 31 October 2026 against the real Compose application, Spring Boot
 4.1.2 and PostgreSQL 18.6. Browser captures in [screenshots](screenshots/) are implemented

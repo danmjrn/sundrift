@@ -139,3 +139,36 @@ Account → Restore my demo creates a new visitor context and switches only that
 It does not delete existing reservations or reset anyone else's context. There is no public
 bulk reset endpoint. Context retention/garbage collection is deliberately operator-managed
 for this release. Do not delete active contexts as part of routine startup.
+
+
+## Verified Sundrift VPS deployment
+
+The owner authorized this target on 31 October 2026: https://sundrift.shapeit.solutions/.
+The deployed source and live acceptance are recorded in LAUNCH_VERIFICATION.md. Earlier
+absence-of-target notes describe the initial local-only delivery, not the current status.
+
+Production uses compose.yml plus infrastructure/production.yml, private runtime configuration
+at /opt/sundrift/shared/runtime.env, loopback ingress 127.0.0.1:3110 and the host TLS edge.
+PUBLIC_BIND=127.0.0.1, COOKIE_SECURE=true and PUBLIC_ORIGIN=https://sundrift.shapeit.solutions
+are required. The production inner proxy relies on that private edge to supply forwarding
+headers; use the normal stripping proxy for a directly accessible local installation.
+
+ops/deploy_vps.py admits only exact pushed source. Its prepare, build, activate and edge
+actions stage immutable releases, build one application image at a time, check readiness,
+and preserve the previous release. The operator’s existing administrator SSH identity stays
+local and is never placed in this repository or CI. App runtime images and volumes are
+isolated from every other service. Backend/database/frontend/edge memory limits are defined
+in the production overlay.
+
+Backups encrypt PostgreSQL custom dumps and immutable media with app-specific host and owner
+recovery recipients. The owner recovery identity is local under ignored .runtime/, mode0600;
+the host identity remains private under /opt/sundrift/shared/. The recovery rehearsal restored
+the encrypted database and referenced photographs without networking. ops/sundrift-backup.*
+provide a daily 05:30 SAST schedule with up to five minutes of jitter. Retention is operator
+managed; these units do not delete old data.
+
+For an operator-controlled rollback, invoke the deployed ops/vps_release.py rollback action:
+it takes a new encrypted backup, selects the recorded previous source/images and checks
+health. Database migrations are not automatically reversed. Keep the patched current release
+and verified backups; choose any schema recovery deliberately. The live rollback path is
+documented but was not executed as an acceptance claim.

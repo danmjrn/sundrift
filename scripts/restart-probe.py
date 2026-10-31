@@ -29,6 +29,7 @@ def call(path, payload=None, key=None):
     with opener.open(request) as response:
         result = json.load(response)
     jar.save(ignore_discard=True)
+    jar_path.chmod(0o600)
     return result
 
 if sys.argv[1] == 'create':

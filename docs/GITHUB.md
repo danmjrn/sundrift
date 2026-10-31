@@ -1,35 +1,26 @@
-# GitHub verification
+# Repository publication
 
-The original repository was renamed in place to **[danmjrn/sundrift](https://github.com/danmjrn/sundrift)**
-using the existing authenticated owner browser session. No replacement repository was created.
+The original `danmjrn/springboot-booking-system` repository was renamed in place to
+`noirstay`, then to **[danmjrn/sundrift](https://github.com/danmjrn/sundrift)** at the
+owner’s direction on 31 October 2026. The signed-in owner repository inventory contained no
+Sundrift collision before the native rename. History, ownership and existing branches/PRs
+were retained; no replacement repository or force push was used. The original commit
+`c3ad278b8433ea575b4e79c951d5682176798393` remains in the ancestry.
 
-- The browser account menu identified `danmjrn`.
-- The target was not found in that owner session, and GitHub's rename form explicitly
-  reported **sundrift is available** before the rename was applied.
-- GitHub returned `https://github.com/danmjrn/sundrift`, owner/name `danmjrn/sundrift`.
-- SSH `ls-remote` verified original `main` at `c3ad278b8433ea575b4e79c951d5682176798393`
-  and the already-pushed feature milestone at `865880e0fd5b98d8050e8ca50d70d32cfbdbe026`.
-- Existing branches/history/ownership were preserved by the native rename operation.
-- The exact requested GitHub description and `java`, `spring-boot`, `nextjs`, `typescript`,
-  `postgresql`, `booking-system`, `full-stack`, `portfolio` topics were saved and re-read.
-- Website/homepage was left empty: no working public deployment target was supplied.
+Git transport is `git@github.com:danmjrn/sundrift.git`. The feature branch retains its
+historical name `feat/noirstay-portfolio`. [PR #1](https://github.com/danmjrn/sundrift/pull/1)
+contains the complete application and rebrand. Main was confirmed unprotected before the
+announced release promotion; no protection or scanner configuration is weakened.
 
-The local remote is `git@github.com:danmjrn/sundrift.git`. SSH authentication confirmed
-`danmjrn`, and pushes use SSH as requested. An old GitHub CLI HTTP credential returned 401;
-the working browser session handled repository administration instead. That credential was
-not printed, changed or rotated. No GitHub plugin connection is claimed.
+The verified description is:
 
-Work is on **[feat/noirstay-portfolio](https://github.com/danmjrn/sundrift/tree/feat/noirstay-portfolio)**.
-The default branch is preserved for review; no force-push, branch-protection change or
-merge is performed. The reviewable [PR #1](https://github.com/danmjrn/sundrift/pull/1) targets `main`.
-The verification document records the tested application/test commits and CI evidence.
+> Discover South African stays, check availability and reserve with clear pricing and simulated checkout. Manage trips, cancellations, saved stays and reviews, while hosts manage listings, photographs and calendars and administrators review publication.
 
-For subsequent authorized updates:
+Topics remain java, spring-boot, nextjs, typescript, postgresql, booking-system, full-stack
+and portfolio. The homepage was set to https://sundrift.shapeit.solutions/ only after
+trusted TLS, real rendering and API access succeeded.
 
-```sh
-git remote set-url origin git@github.com:danmjrn/sundrift.git
-git push origin feat/noirstay-portfolio
-```
-
-The original repository URL redirects to the renamed repository. Historical references
-in NOTICE and the case study intentionally retain the original project name.
+The feature-first README follows the Reverse Engineering & Documentation Plugin structure.
+The same convention was applied to owned project repositories without republishing private
+source or changing those applications. Existing engineering text and notices were retained
+in their README.reference.md where appropriate; empty repositories explicitly remain planned.

@@ -1,0 +1,13 @@
+[Unit]
+Description=Sundrift encrypted database and media backup
+After=docker.service
+Requires=docker.service
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/sundrift/current/ops/vps_release.py backup
+UMask=0077
+NoNewPrivileges=true
+Nice=10
+CPUQuota=50%
+MemoryMax=512M
+TimeoutStartSec=600

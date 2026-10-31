@@ -8,7 +8,7 @@
 - [x] Accounts, cancellation, wishlist and eligible reviews.
 - [x] Host listings/media/calendar and administrator publication/audit.
 - [x] Explicit demo profile and 24 fictional stays.
-- [x] Responsive black Next.js frontend and real browser screenshots.
+- [x] Responsive Next.js frontend and real browser screenshots; original black theme, then Sundrift nude palette.
 - [x] Backend PostgreSQL/concurrency/security tests; frontend checks/build/journeys.
 - [x] Compose, CI, setup/deployment/rollback docs and portfolio case study.
 - [x] GitHub rename/description/topics, push and reviewable PR if authenticated.
@@ -45,13 +45,30 @@ existing database was touched. This is an environment-dependent failing baseline
 claim that the inherited application cannot run when MySQL is provisioned.
 
 GitHub access resolved: SSH authenticated as danmjrn and pushed foundation commit 865880e.
-The signed-in browser owner session verified `sundrift is available`, renamed the existing
-repository, and saved the exact description plus all eight requested topics. SSH remote
-now points to git@github.com:danmjrn/sundrift.git. Remote main remains c3ad278 and the existing
-feature branch remains intact. The old HTTP API credential returned 401; it was not modified.
+The signed-in owner session first renamed springboot-booking-system to noirstay, then
+renamed noirstay to sundrift after the follow-up request and an authenticated owned-repository
+collision check. The current SSH remote is git@github.com:danmjrn/sundrift.git. History and
+the original feature branch remain intact. The old HTTP API credential returned 401; it was
+not modified.
 
-Final delivery: [PR #1](https://github.com/danmjrn/sundrift/pull/1) targets preserved `main`
-from `feat/noirstay-portfolio`. All 30 backend tests, 5 frontend unit tests, 9 browser
-checks, lint/type checks, production builds and the authenticated restart probe passed.
-Independent CI run 41147486907 passed all three jobs. Real screenshots, computed contrast
-and exported OpenAPI evidence are committed with the final verification report.
+The first NoirStay delivery passed 30 backend tests, 5 frontend unit tests, 9 browser checks,
+production builds and an authenticated restart probe. Its revision-bound evidence remains in
+[the original verification report](VERIFICATION.md).
+
+## Sundrift follow-up
+
+- [x] Rename repository, Java namespace, project configuration and UI without rewriting history.
+- [x] Apply sand, oat, clay and cocoa colours across guest, host and administrator screens.
+- [x] Preserve applied Flyway migrations and local volumes; add a synthetic-copy-only V5.
+- [x] Roll out the feature-first README convention to all owned project repositories, retaining each existing setup/reference text.
+- [x] Publish the isolated HTTPS VPS application at sundrift.shapeit.solutions.
+- [x] Publish Sundrift first in the portfolio's Selected work while preserving its three existing projects.
+- [x] Fix the observed account-loading/save race and pass all 11 live browser checks.
+- [x] Verify 30 PostgreSQL backend tests and 5 frontend unit tests in CI, plus production builds.
+- [x] Verify session/confirmed-booking persistence across container replacement.
+- [x] Restore encrypted database/media backup in a network-isolated fixture and verify booking/media references.
+- [x] Refresh real screenshots, OpenAPI and computed contrast evidence.
+
+[PR #1](https://github.com/danmjrn/sundrift/pull/1) preserves the named feature branch.
+[Launch verification](LAUNCH_VERIFICATION.md) records exact application source, CI runs,
+public deployment, recovery evidence and remaining operational limits.

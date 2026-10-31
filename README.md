@@ -77,13 +77,14 @@ migrations, backups, deployment and rollback.
 - Preserved booking rules and existing local data; an additive migration updates fictional
   listing copy without changing applied Flyway migrations.
 
-[Verification](docs/VERIFICATION.md) distinguishes the earlier application evidence from
-fresh Sundrift launch checks. [Rebrand notes](docs/REBRAND.md) explain storage compatibility.
+[Launch verification](docs/LAUNCH_VERIFICATION.md) records 30 backend tests, 5 unit tests,
+11 live browser checks, production builds and encrypted recovery.
+[Earlier verification](docs/VERIFICATION.md) remains historical to its recorded revision. [Rebrand notes](docs/REBRAND.md) explain storage compatibility.
 
 ## Running the Project
 
 ```sh
-git clone --branch feat/noirstay-portfolio git@github.com:danmjrn/sundrift.git
+git clone git@github.com:danmjrn/sundrift.git
 cd sundrift
 cp .env.example .env
 # Replace DATABASE_PASSWORD with a unique local password.
@@ -94,8 +95,8 @@ Open [localhost:3000](http://localhost:3000). Choose **Portfolio demo → Demo g
 host** or **Demo admin**. Switching roles retains your visitor context; the host can see the
 guest reservation. Account → Restore my demo creates a fresh private context.
 
-Target hosted address: [sundrift.shapeit.solutions](https://sundrift.shapeit.solutions).
-Deployment is recorded only after DNS, TLS, rendering and persistent journeys verify.
+Live application: **[sundrift.shapeit.solutions](https://sundrift.shapeit.solutions/)**.
+Featured in [Daniel’s Selected work](https://danieljrnkulu.shapeit.solutions/work/sundrift).
 
 For verification:
 
