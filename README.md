@@ -1,128 +1,108 @@
-# NoirStay
+# Sundrift
 
-**Find somewhere worth staying.**
+**Somewhere to slow down.**
 
-An accommodation booking portfolio application by **Daniel Jr Nkulu**, for **Shape It
-Solutions**. A new Next.js experience sits on a Java/Spring backend and PostgreSQL, with
-original black-theme design and fictional South African stays.
+Sundrift helps travellers discover South African stays, check available dates and reserve
+with clear prices. It brings trips, cancellations, saved stays and guest reviews together
+with host listing management and administrator publication in one accommodation system.
 
-![The running NoirStay homepage](docs/screenshots/home-desktop-viewport.png)
+## Features
 
-Real captures: [stay on phone](docs/screenshots/stay-phone.png) ·
-[guest checkout](docs/screenshots/checkout-desktop.png) ·
-[host studio](docs/screenshots/host-desktop.png) ·
-[administrator review](docs/screenshots/admin-desktop.png).
+- **Stay discovery:** Search by destination, dates and guests. Refine by price, type,
+  amenities and rating, with sorting, shareable URL filters and pagination.
+- **Considered stay pages:** Explore photographs, amenities, sleeping arrangements,
+  approximate location, house rules, fictional reviews and an availability calendar.
+- **Clear reservations:** Receive server-calculated nightly rates, cleaning/service fees
+  and demo VAT. A ten-minute hold protects selected dates while simulated checkout completes.
+- **Trips and flexibility:** Keep a confirmation reference, reopen persisted trip details,
+  preview policy-based refunds, cancel and release dates. Completed stays accept one review.
+- **Your account:** Register, sign in, edit account details and save favourite stays using
+  HttpOnly sessions and CSRF-protected requests.
+- **Host studio:** Create and edit listings, upload/remove photographs, submit for
+  publication, block/unblock dates and inspect reservations and booking-derived totals.
+- **Publication desk:** Review, approve or unpublish stays and inspect context-scoped users,
+  bookings, simulated payment attempts and administrative audit records.
+- **Private demo perspectives:** Enter as guest, host or administrator without shared
+  passwords. Each visitor has a separate synthetic context with 24 fictional stays.
+- **Reservations that hold up:** PostgreSQL protects holds, confirmed stays and host blocks
+  with one exclusion constraint. Transactional settlement, expiry, cancellation and persisted
+  idempotency protect retries and competing requests.
 
-This is a synthetic portfolio demo: no real accommodation is sold, no money is charged,
-no card details are collected and no booking emails are sent. One listing is one
-independently reservable unit, including an individual hotel room—not pooled room stock.
+![Sundrift running application](docs/screenshots/home-desktop-viewport.png)
 
-## Run it
+[Stay on phone](docs/screenshots/stay-phone.png) · [Checkout](docs/screenshots/checkout-desktop.png) ·
+[Host studio](docs/screenshots/host-desktop.png) · [Publication desk](docs/screenshots/admin-desktop.png)
 
-Requires Docker with Compose. The original repository was renamed to `danmjrn/noirstay`, preserving history and branches.
-The implementation is on its review branch:
+## Requirements
+
+**Docker with Compose** runs the complete system. Native development uses Java **21 LTS**,
+Gradle **8.14.3**, PostgreSQL **18.6**, Node **24** and pnpm **11.12.0**.
+
+The application uses Spring Boot **4.1.2**, Next.js **16.4.3**, React **19.3.1**, strict
+TypeScript **6.0.3** and Tailwind **4.3.3**. [Version references](docs/TOOLCHAIN.md) record the pins.
+
+## Settings and Configuration
+
+Copy `.env.example` to an untracked `.env` and set a unique database password. The explicit
+`demo` profile enables fictional fixtures and visitor-specific entry points. Normal startup
+creates no demo users or privileged demo credentials.
+
+The public origin serves Next.js and routes `/api/v1` to Spring. PostgreSQL remains internal;
+local media and database volumes persist across container replacement. Production uses a
+TLS edge and Secure cookies. [Operations](docs/DEPLOYMENT.md) covers environment settings,
+migrations, backups, deployment and rollback.
+
+## Known Issues and Scope
+
+- One listing is one independently reservable unit. There is no pooled inventory or
+  multi-room checkout. Rates are flat per night and currency is ZAR; no conversion is claimed.
+- Stays, hosts and seeded reviews are fictional. Payments and email are simulated. No card
+  data is collected and no money is charged or booking email sent.
+- Demo-context/media retention is operator-managed. Login/context throttles are in memory;
+  this release targets one application instance.
+- Existing MySQL data was not supplied or migrated. Historical bookings survive unpublication.
+- Browser automation uses Chromium. It complements manual responsive inspection and does
+  not claim a complete accessibility conformance audit or measured production capacity.
+- Rotate any active database, AWS, JWT or demo-account credentials from the inherited project.
+  Their values are not reproduced, and Git history is preserved.
+
+## Release Notes
+
+### Sundrift launch — 31 October 2026
+
+- Renamed the existing NoirStay repository and application to Sundrift, preserving history.
+- Introduced sand, oat, clay and cocoa colours, a sun/horizon wordmark and warm editorial styling.
+- Adopted the feature-first README structure used by the
+  [Reverse Engineering & Documentation Plugin](https://github.com/danmjrn/ReverseEngineeringDocPlugin).
+- Preserved booking rules and existing local data; an additive migration updates fictional
+  listing copy without changing applied Flyway migrations.
+
+[Verification](docs/VERIFICATION.md) distinguishes the earlier application evidence from
+fresh Sundrift launch checks. [Rebrand notes](docs/REBRAND.md) explain storage compatibility.
+
+## Running the Project
 
 ```sh
-git clone --branch feat/noirstay-portfolio https://github.com/danmjrn/noirstay.git
-cd noirstay
+git clone --branch feat/noirstay-portfolio git@github.com:danmjrn/sundrift.git
+cd sundrift
 cp .env.example .env
-# Edit .env and replace DATABASE_PASSWORD with a unique local password.
+# Replace DATABASE_PASSWORD with a unique local password.
 docker compose up --build -d --wait
 ```
 
-Local preview: **[http://localhost:3000](http://localhost:3000)**. The
-[feature branch](https://github.com/danmjrn/noirstay/tree/feat/noirstay-portfolio) contains this
-implementation; [PR #1](https://github.com/danmjrn/noirstay/pull/1) is open for review.
-Publication verification is recorded in [GitHub status](docs/GITHUB.md). No public deployment URL is claimed.
+Open [localhost:3000](http://localhost:3000). Choose **Portfolio demo → Demo guest**, **Demo
+host** or **Demo admin**. Switching roles retains your visitor context; the host can see the
+guest reservation. Account → Restore my demo creates a fresh private context.
 
-Choose **Portfolio demo → Demo guest**, **Demo host** or **Demo admin**. No shared password
-is required. First entry creates your own synthetic data context; switching roles keeps
-that context, so the host can see the guest's reservation. Account → Restore my demo starts
-a fresh private context without resetting anyone else's data. Sessions survive backend
-restarts. The explicit `demo` profile enables this; normal startup creates no demo users.
+Target hosted address: [sundrift.shapeit.solutions](https://sundrift.shapeit.solutions).
+Deployment is recorded only after DNS, TLS, rendering and persistent journeys verify.
 
-For separate Java/Next development, configurable ports, environment variables, migration
-permissions, backups, deployment and rollback, see [the operations guide](docs/DEPLOYMENT.md).
-
-## What works
-
-- Destination/date/guest search, price/type/amenity/rating filters, URL state, stable sorting
-  and pagination; responsive galleries, availability, rules, fictional reviews and full prices.
-- Registration, session login/logout, account editing, saved stays and persisted trips.
-- Server quotes, ten-minute inventory holds, policy acceptance, deterministic payment
-  simulation, confirmation, cancellation/refund previews and eligible one-per-stay reviews.
-- Host draft/edit/submission forms, validated local photograph upload/removal, calendar date blocks/unblocks,
-  reservations and metrics derived from persisted data.
-- Context-scoped administrator publication/unpublication, user/booking/payment inspection
-  and publication audit history. Historical trips remain after listing changes.
-- 24 fictional stays across Cape Town, Johannesburg/Sandton, Durban, the Garden Route and
-  Drakensberg, with completed/future reservations, demo reviews and blocked dates.
-
-The [five-minute walkthrough](docs/WALKTHROUGH.md) demonstrates the guest → host → cancellation
-journey. [Our approach](http://localhost:3000/about) explains the engineering separately from
-ordinary booking screens.
-
-## Technology and layout
-
-Java **21 LTS**, Spring Boot **4.1.2**, Gradle **8.14.3**, PostgreSQL **18.6**, Next.js
-**16.4.3**, React **19.3.1**, strict TypeScript **6.0.3**, Tailwind **4.3.3** and pnpm
-**11.12.0**. See [version selection and official references](docs/TOOLCHAIN.md).
-
-```text
-backend/          Spring MVC, Security/JPA, migrations, services and PostgreSQL tests
-frontend/         Next.js App Router, typed API client, feature components and browser tests
-infrastructure/   Single-origin Nginx and loopback-only development overlay
-scripts/          Authenticated restart/persistence smoke probe
-docs/             Architecture, walkthrough, case study, evidence, operations and assets
-```
-
-```mermaid
-flowchart LR
-    Browser --> Nginx
-    Nginx --> Next[Next.js]
-    Nginx --> Spring[Spring /api/v1]
-    Next -->|per-request cookies; no-store| Spring
-    Spring --> PostgreSQL[(PostgreSQL)]
-    Spring --> Media[Persistent media]
-```
-
-[Architecture and entity diagram](docs/ARCHITECTURE.md) covers module boundaries,
-constraints, deletion behaviour, authentication, isolation and engineering tradeoffs.
-
-## Reservations that keep their promise
-
-Stays occupy **[check-in, check-out)**, allowing back-to-back reservations. A single
-PostgreSQL GiST exclusion constraint protects active holds, confirmed stays and host blocks.
-Transactions lock the listing before a booking, and coordinated tests exercise competing
-requests. No current-time expression appears in the constraint: expiry explicitly changes
-booking/inventory state, including after restarts.
-
-Five-minute quotes record a price version; obtaining a hold after expiry or a price change
-requires renewed consent. A valid hold honours its agreed price for ten minutes. Final
-confirmation rechecks ownership, expiry, publication, dates and capacity. Payment simulation
-and confirmation commit atomically. Persisted user/operation idempotency keys replay identical
-requests and reject conflicting reuse. Cancellation atomically records one refund and
-releases dates. Spring owns all identity, status, inventory and money decisions.
-
-Pricing uses `BigDecimal`/`numeric(12,2)` and HALF_UP rounding: nightly rate × nights,
-one cleaning fee, 8% service fee, then 15% demo VAT on their sum. Currency is explicitly ZAR.
-Flexible cancellation refunds 100% at 2+ calendar days before arrival; moderate refunds
-100% at 7+ days and 50% at 2–6 days; later cancellation refunds zero. These percentages apply
-to the agreed full total, including fees/tax. The server recalculates the refund at cancellation.
-
-## Verify it
-
-With Java 21 and Docker running:
+For verification:
 
 ```sh
 cd backend
 ./gradlew test bootJar --no-daemon
-```
-
-With Node 22.13+/24 and pnpm 11.12.0:
-
-```sh
-cd frontend
+cd ../frontend
 pnpm install --frozen-lockfile
 pnpm lint
 pnpm typecheck
@@ -132,43 +112,15 @@ pnpm exec playwright install chromium
 pnpm test:e2e
 ```
 
-Browser tests use the running preview, create synthetic records and capture real screenshots.
-[Verification evidence](docs/VERIFICATION.md) records 30 passing backend tests, 5 passing frontend unit tests, 9 passing browser checks, screenshots, restart
-rehearsal and any remaining gaps. GitHub Actions defines backend, frontend and Compose/browser
-jobs; no remote CI result is claimed before it actually runs.
+## For More Information
 
-Live API contracts: [OpenAPI JSON](http://localhost:3000/api/v1/openapi) and
-[Swagger UI](http://localhost:3000/api/v1/docs). Protected mutations use the HttpOnly `SESSION`
-cookie and a CSRF token from `/api/v1/auth/csrf`. Booking transitions additionally require an
-`Idempotency-Key`. [API examples](docs/API.md) describe the actual checkout contract.
+- [Five-minute walkthrough](docs/WALKTHROUGH.md), [API examples](docs/API.md) and
+  [live OpenAPI](http://localhost:3000/api/v1/openapi).
+- [Architecture and entity relationship diagram](docs/ARCHITECTURE.md), including the
+  booking lifecycle, pricing, concurrency, cancellation and isolation rules.
+- [Portfolio case study](docs/CASE_STUDY.md), [source audit](docs/IMPLEMENTATION.md) and
+  [GitHub verification](docs/GITHUB.md).
+- [Asset attribution](docs/ASSETS.md) and [inherited notices](NOTICE).
+- [Reusable README structure](docs/README_STANDARD.md).
 
-## From the original project
-
-The same Git history is preserved. MySQL, doubles and legacy date arithmetic were replaced;
-UUID repository typing, ownership, overlapping inventory, entity request bodies, hardcoded
-guest identity and unconditional privileged initialization were corrected. Unused view,
-reactive, AWS, Lombok and JWT dependencies were removed. Current source uses environment
-configuration and a functional persistent media adapter; it needs no AWS account.
-
-No MySQL dataset was supplied and no existing customer-data migration is claimed. The
-inherited source contained database credentials, AWS credential configuration, JWT signing
-material and demo account credentials. Revoke/rotate any previously used values; this work
-does not reproduce them, rewrite history or rotate unrelated infrastructure credentials.
-
-The [portfolio case study](docs/CASE_STUDY.md) distinguishes inherited foundations from the
-new implementation. [The audit checklist](docs/IMPLEMENTATION.md) records the transformation.
-
-## Deliberate limits
-
-This is a single-instance portfolio release with flat nightly rates, ZAR only, local media,
-simulated payments/email and operator-managed demo-context retention. Login/context throttles
-are in memory. Host/admin identities in a normal, non-demo deployment require deliberate
-operator provisioning. There is no pooled inventory, multi-room checkout, real property
-verification, dynamic nightly pricing, currency conversion or measured production capacity.
-The deployment guide requires an explicitly authorized TLS target; none was supplied here.
-
-Photographs are licensed illustrative [Unsplash assets](docs/ASSETS.md). Wordmark/favicon/
-social artwork are original. Real application captures are in `docs/screenshots/`.
-Inherited attribution is preserved in [NOTICE](NOTICE) and Git history. The original checkout
-had no licence file; no new licence grant is invented. GitHub rename, metadata and PR verification
-are documented in [GITHUB.md](docs/GITHUB.md).
+Created by **Daniel Jr Nkulu / Shape It Solutions**. Photographs illustrate fictional stays.

@@ -1,6 +1,6 @@
 # Asset provenance
 
-The wordmark, favicon and social preview are original code-authored NoirStay assets.
+The wordmark, favicon and social preview are original code-authored Sundrift assets.
 Photography is from Unsplash, used under the [Unsplash licence](https://unsplash.com/license).
 Attribution is appreciated by the source; the images are illustrative and do not identify
 actual bookable properties, hosts or South African addresses. No photographer identity is

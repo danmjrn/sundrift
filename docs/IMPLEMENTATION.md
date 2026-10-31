@@ -1,4 +1,4 @@
-# NoirStay implementation checklist
+# Sundrift implementation checklist
 
 - [x] Clone original history; clean `main` at `c3ad278`; create `feat/noirstay-portfolio`.
 - [x] Inspect original defects and credentials without reproducing secret values.
@@ -45,12 +45,12 @@ existing database was touched. This is an environment-dependent failing baseline
 claim that the inherited application cannot run when MySQL is provisioned.
 
 GitHub access resolved: SSH authenticated as danmjrn and pushed foundation commit 865880e.
-The signed-in browser owner session verified `noirstay is available`, renamed the existing
+The signed-in browser owner session verified `sundrift is available`, renamed the existing
 repository, and saved the exact description plus all eight requested topics. SSH remote
-now points to git@github.com:danmjrn/noirstay.git. Remote main remains c3ad278 and the existing
+now points to git@github.com:danmjrn/sundrift.git. Remote main remains c3ad278 and the existing
 feature branch remains intact. The old HTTP API credential returned 401; it was not modified.
 
-Final delivery: [PR #1](https://github.com/danmjrn/noirstay/pull/1) targets preserved `main`
+Final delivery: [PR #1](https://github.com/danmjrn/sundrift/pull/1) targets preserved `main`
 from `feat/noirstay-portfolio`. All 30 backend tests, 5 frontend unit tests, 9 browser
 checks, lint/type checks, production builds and the authenticated restart probe passed.
 Independent CI run 41147486907 passed all three jobs. Real screenshots, computed contrast

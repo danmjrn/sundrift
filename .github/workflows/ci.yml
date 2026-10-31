@@ -1,4 +1,4 @@
-name: NoirStay verification
+name: Sundrift verification
 on: [push, pull_request]
 permissions:
   contents: read

@@ -1,4 +1,4 @@
-# NoirStay: from a booking exercise to a portfolio application
+# Sundrift: from a booking exercise to a portfolio application
 
 **Author:** Daniel Jr Nkulu · **Portfolio context:** Shape It Solutions.
 
@@ -8,7 +8,7 @@ Its availability query checked matching dates for the same guest, accepted booki
 from requests, used floating-point money and did not enforce cancellation ownership.
 
 This implementation preserves the original repository history while replacing those
-foundations with a deliberate product: NoirStay, a premium black accommodation booking
+foundations with a deliberate product: Sundrift, a premium black accommodation booking
 experience for fictional South African stays. The work includes a new Next.js App Router
 frontend, PostgreSQL migrations, session/CSRF authentication, original design/branding,
 search, guest checkout/trips/cancellation, host listing/media/calendar management and

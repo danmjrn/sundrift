@@ -121,7 +121,7 @@ Example backup stream (the invoking shell creates the backup under a restricted 
 ```sh
 umask 077
 mkdir -p .runtime/backups
-docker compose exec -T database pg_dump -U noirstay -d noirstay -Fc > .runtime/backups/noirstay.dump
+docker compose exec -T database pg_dump -U sundrift -d sundrift -Fc > .runtime/backups/sundrift.dump
 ```
 
 Copy the media volume through an operator-approved backup process. Backups contain sessions

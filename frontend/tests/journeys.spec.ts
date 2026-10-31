@@ -4,7 +4,7 @@ let browserErrors:string[]=[];
 test.beforeEach(async({page})=>{browserErrors=[];page.on('pageerror',e=>browserErrors.push(e.message));page.on('response',r=>{if(r.status()>=500)browserErrors.push(`${r.status()} ${r.url()}`);});});
 test.afterEach(async()=>{expect(browserErrors).toEqual([]);});
 async function capture(page:Page,path:string){await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.screenshot({path,fullPage:true,scale:'css'});}
-async function audit(page:Page){await expect(page).toHaveTitle(/NoirStay/);const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(result.violations).toEqual([]);}
+async function audit(page:Page){await expect(page).toHaveTitle(/Sundrift/);const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(result.violations).toEqual([]);}
 function future(days:number){const d=new Date();d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);}
 async function demo(page:Page,role:string,next='/'){await page.goto('/login?next='+encodeURIComponent(next));await page.getByRole('button',{name:'Demo '+role,exact:true}).click();await expect(page).not.toHaveURL(/\/login/);}
 test('guest search, wishlist, persisted checkout, host reservation and cancellation',async({page},testInfo)=>{
@@ -14,7 +14,7 @@ test('guest search, wishlist, persisted checkout, host reservation and cancellat
  await expect(page.getByRole('main').locator('.stay-card').filter({visible:true}).first()).toBeVisible();await page.getByRole('main').locator('.stay-card').filter({visible:true}).first().getByRole('button',{name:/^Save /}).click();await expect(page.getByRole('main').locator('.stay-card').filter({visible:true}).first().getByRole('button',{name:/^Unsave /})).toBeVisible();
  await page.getByRole('main').locator('.stay-card').filter({visible:true}).first().getByRole('link',{name:/^Explore /}).click();await expect(page.getByRole('main').locator('.booking-card .price-breakdown').filter({visible:true})).toBeVisible();
  await page.getByRole('button',{name:'Continue to reservation'}).click();await expect(page).toHaveURL(/\/checkout\//);
- await expect(page.getByRole('button',{name:'Confirm simulated reservation',exact:true})).toBeVisible();await expect(page).toHaveTitle(/NoirStay/);await capture(page,`../docs/screenshots/checkout-${testInfo.project.name}.png`);await audit(page);await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Confirm simulated reservation'}).click();await expect(page).toHaveURL(/\/trips\//);
+ await expect(page.getByRole('button',{name:'Confirm simulated reservation',exact:true})).toBeVisible();await expect(page).toHaveTitle(/Sundrift/);await capture(page,`../docs/screenshots/checkout-${testInfo.project.name}.png`);await audit(page);await page.getByRole('checkbox').check();await page.getByRole('button',{name:'Confirm simulated reservation'}).click();await expect(page).toHaveURL(/\/trips\//);
  await expect(page.getByRole('main').getByText('confirmed',{exact:true})).toBeVisible();const tripUrl=page.url();const reference=(await page.getByRole('main').locator(':scope>.wrap>.eyebrow').filter({visible:true}).innerText()).trim();await page.reload();await expect(page.getByRole('main').getByText('confirmed',{exact:true})).toBeVisible();
  await demo(page,'host','/host');await expect(page.getByRole('cell',{name:reference,exact:true})).toBeVisible();await capture(page,`../docs/screenshots/host-${testInfo.project.name}.png`);
  await page.getByRole('main').getByLabel('Block from',{exact:true}).filter({visible:true}).fill(future(80));await page.getByRole('main').getByLabel('Until, exclusive',{exact:true}).filter({visible:true}).fill(future(82));await page.getByRole('button',{name:'Block dates',exact:true}).click();await expect(page.getByRole('main').getByText('Your dates have been blocked.')).toBeVisible();await page.getByRole('main').locator('.block-row').filter({visible:true}).last().getByRole('button',{name:'Unblock',exact:true}).click();await expect(page.getByRole('main').getByText('Dates released.')).toBeVisible();
@@ -31,14 +31,14 @@ test('host listing creation, real image upload, admin publication and audit',asy
 });
 test('protected routes, keyboard navigation, error state and narrow layout',async({page},testInfo)=>{
  await page.goto('/trips');await expect(page).toHaveURL(/\/login/);
- await page.goto('/');await expect(page.getByRole('heading',{name:'Find somewhere worth staying.',exact:true})).toBeVisible();await capture(page,`../docs/screenshots/home-${testInfo.project.name}.png`);await page.keyboard.press('Tab');await expect(page.getByRole('link',{name:'Skip to content'})).toBeFocused();
+ await page.goto('/');await expect(page.getByRole('heading',{name:'Somewhere to slow down.',exact:true})).toBeVisible();await capture(page,`../docs/screenshots/home-${testInfo.project.name}.png`);await page.keyboard.press('Tab');await expect(page.getByRole('link',{name:'Skip to content'})).toBeFocused();
  await expect(page.locator('body')).toHaveJSProperty('scrollWidth',await page.locator('body').evaluate(x=>x.clientWidth));
  await page.goto('/search?destination=NoSuchPlace');await expect(page.getByRole('heading',{name:'A different somewhere?'})).toBeVisible();
  await page.goto('/search?checkIn=2020-01-01&checkOut=2020-01-03');await expect(page.getByRole('main').getByText(/Choose 1–30 nights/)).toBeVisible();
 });
 
 test('registration, persisted account editing, logout and password login retain the correct demo context',async({page})=>{
- const email='registered-'+Date.now()+'@demo.invalid';const password='synthetic-noirstay-password';
+ const email='registered-'+Date.now()+'@demo.invalid';const password='synthetic-sundrift-password';
  await page.goto('/login');await page.getByRole('button',{name:'New here? Create an account',exact:true}).click();
  await page.getByRole('main').getByLabel('Your name',{exact:true}).filter({visible:true}).fill('Registered demo guest');
  await page.getByRole('main').getByLabel('Email address',{exact:true}).filter({visible:true}).fill(email);

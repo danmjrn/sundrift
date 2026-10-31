@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "NoirStay API",
+    "title": "Sundrift API",
     "description": "One independently rentable unit per listing. ZAR prices. Holds last ten minutes; quotes last five. All payment scenarios are simulated. Mutations require a CSRF token from /api/v1/auth/csrf; booking transitions also require Idempotency-Key.",
     "contact": {
       "name": "Daniel Jr Nkulu \u00b7 Shape It Solutions"

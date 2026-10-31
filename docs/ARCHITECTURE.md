@@ -1,6 +1,6 @@
 # Architecture and invariants
 
-NoirStay is a modular monolith, with one Next.js frontend and one PostgreSQL database.
+Sundrift is a modular monolith, with one Next.js frontend and one PostgreSQL database.
 One listing is one independently reservable unit. Pooled room inventory, multi-room
 reservations, currency conversion, real payments and commercial property verification
 are outside this release.

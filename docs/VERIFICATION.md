@@ -2,7 +2,7 @@
 
 Verified locally on 31 October 2026 against the real Compose application, Spring Boot
 4.1.2 and PostgreSQL 18.6. Browser captures in [screenshots](screenshots/) are implemented
-screens, not design mockups. The project is a synthetic portfolio demonstration. Review: [PR #1](https://github.com/danmjrn/noirstay/pull/1).
+screens, not design mockups. The project is a synthetic portfolio demonstration. Review: [PR #1](https://github.com/danmjrn/sundrift/pull/1).
 
 ## Results
 
@@ -15,7 +15,7 @@ screens, not design mockups. The project is a synthetic portfolio demonstration.
 | Multi-stage Compose backend/frontend production builds | Passed; all 4 services healthy |
 | `pnpm test:e2e` | 9 passed; desktop/phone Chromium |
 | Authenticated restart probe | Passed after real backend container restart; same session/reference/total |
-| Remote GitHub Actions | All 3 jobs passed at `7230de2`: [run 41147486907](https://github.com/danmjrn/noirstay/actions/runs/41147486907) |
+| Remote GitHub Actions | All 3 jobs passed at `7230de2`: [run 41147486907](https://github.com/danmjrn/sundrift/actions/runs/41147486907) |
 
 Backend tests comprise 23 reservation/security/database tests, 4 pricing/date tests and
 3 normal-startup/API-security tests. Testcontainers runs actual PostgreSQL 18.6, including
