@@ -8,6 +8,11 @@ original black-theme design and fictional South African stays.
 
 ![The running NoirStay homepage](docs/screenshots/home-desktop-viewport.png)
 
+Real captures: [stay on phone](docs/screenshots/stay-phone.png) ·
+[guest checkout](docs/screenshots/checkout-desktop.png) ·
+[host studio](docs/screenshots/host-desktop.png) ·
+[administrator review](docs/screenshots/admin-desktop.png).
+
 This is a synthetic portfolio demo: no real accommodation is sold, no money is charged,
 no card details are collected and no booking emails are sent. One listing is one
 independently reservable unit, including an individual hotel room—not pooled room stock.
@@ -27,7 +32,8 @@ docker compose up --build -d --wait
 
 Local preview: **[http://localhost:3000](http://localhost:3000)**. The
 [feature branch](https://github.com/danmjrn/noirstay/tree/feat/noirstay-portfolio) contains this
-implementation; publication verification is recorded in [GitHub status](docs/GITHUB.md). No public deployment URL is claimed.
+implementation; [PR #1](https://github.com/danmjrn/noirstay/pull/1) is open for review.
+Publication verification is recorded in [GitHub status](docs/GITHUB.md). No public deployment URL is claimed.
 
 Choose **Portfolio demo → Demo guest**, **Demo host** or **Demo admin**. No shared password
 is required. First entry creates your own synthetic data context; switching roles keeps
@@ -45,7 +51,7 @@ permissions, backups, deployment and rollback, see [the operations guide](docs/D
 - Registration, session login/logout, account editing, saved stays and persisted trips.
 - Server quotes, ten-minute inventory holds, policy acceptance, deterministic payment
   simulation, confirmation, cancellation/refund previews and eligible one-per-stay reviews.
-- Host draft/edit/submission forms, validated local photograph uploads, date blocks/unblocks,
+- Host draft/edit/submission forms, validated local photograph upload/removal, calendar date blocks/unblocks,
   reservations and metrics derived from persisted data.
 - Context-scoped administrator publication/unpublication, user/booking/payment inspection
   and publication audit history. Historical trips remain after listing changes.
@@ -127,7 +133,7 @@ pnpm test:e2e
 ```
 
 Browser tests use the running preview, create synthetic records and capture real screenshots.
-[Verification evidence](docs/VERIFICATION.md) records exact results, screenshots, restart
+[Verification evidence](docs/VERIFICATION.md) records 30 passing backend tests, 5 passing frontend unit tests, 9 passing browser checks, screenshots, restart
 rehearsal and any remaining gaps. GitHub Actions defines backend, frontend and Compose/browser
 jobs; no remote CI result is claimed before it actually runs.
 

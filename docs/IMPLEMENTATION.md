@@ -3,15 +3,15 @@
 - [x] Clone original history; clean `main` at `c3ad278`; create `feat/noirstay-portfolio`.
 - [x] Inspect original defects and credentials without reproducing secret values.
 - [x] Record build baseline and supported pinned toolchain.
-- [ ] PostgreSQL migrations, sessions/CSRF, DTOs, inventory invariant and pricing.
-- [ ] Search → quote → hold → simulated payment → persisted trip.
-- [ ] Accounts, cancellation, wishlist and eligible reviews.
-- [ ] Host listings/media/calendar and administrator publication/audit.
-- [ ] Explicit demo profile and 24 fictional stays.
-- [ ] Responsive black Next.js frontend and real browser screenshots.
-- [ ] Backend PostgreSQL/concurrency/security tests; frontend checks/build/journeys.
-- [ ] Compose, CI, setup/deployment/rollback docs and portfolio case study.
-- [ ] GitHub rename/description/topics, push and reviewable PR if authenticated.
+- [x] PostgreSQL migrations, sessions/CSRF, DTOs, inventory invariant and pricing.
+- [x] Search → quote → hold → simulated payment → persisted trip.
+- [x] Accounts, cancellation, wishlist and eligible reviews.
+- [x] Host listings/media/calendar and administrator publication/audit.
+- [x] Explicit demo profile and 24 fictional stays.
+- [x] Responsive black Next.js frontend and real browser screenshots.
+- [x] Backend PostgreSQL/concurrency/security tests; frontend checks/build/journeys.
+- [x] Compose, CI, setup/deployment/rollback docs and portfolio case study.
+- [x] GitHub rename/description/topics, push and reviewable PR if authenticated.
 
 ## Audit
 
@@ -27,9 +27,8 @@ dependencies, MySQL and backend port 3000. Current source contains database cred
 AWS access credential configuration and JWT signing material; these categories require
 revocation/rotation wherever previously used. Values are deliberately omitted here.
 
-GitHub API: an anonymous lookup of `danmjrn/noirstay` returned 404; private name collisions
-cannot be ruled out without authentication. The original repository exists. Git credential
-helper returned no authenticated credential. Rename/push/metadata remain unverified.
+Initial anonymous GitHub access could not establish name availability or administer the repository.
+The authenticated owner-session verification and SSH resolution are recorded below.
 
 Baseline: original wrapper was not executable; sandboxed invocation could not download.
 An isolated Gradle 8.14.3 / JDK 21 run reached compileJava and failed in inherited
@@ -50,3 +49,9 @@ The signed-in browser owner session verified `noirstay is available`, renamed th
 repository, and saved the exact description plus all eight requested topics. SSH remote
 now points to git@github.com:danmjrn/noirstay.git. Remote main remains c3ad278 and the existing
 feature branch remains intact. The old HTTP API credential returned 401; it was not modified.
+
+Final delivery: [PR #1](https://github.com/danmjrn/noirstay/pull/1) targets preserved `main`
+from `feat/noirstay-portfolio`. All 30 backend tests, 5 frontend unit tests, 9 browser
+checks, lint/type checks, production builds and the authenticated restart probe passed.
+Independent CI run 41147486907 passed all three jobs. Real screenshots, computed contrast
+and exported OpenAPI evidence are committed with the final verification report.

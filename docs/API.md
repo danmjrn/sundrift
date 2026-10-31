@@ -12,7 +12,7 @@ All responses, including private SSR/API responses, use no-store. Errors have `c
 | Checkout | POST `/quotes`, `/bookings`, `/bookings/{id}/confirm` |
 | Trips | GET `/bookings`, `/bookings/{id}`, `/bookings/{id}/refund`; POST `/bookings/{id}/cancel`, `/bookings/{id}/review` |
 | Wishlist | GET `/wishlist`; POST/DELETE `/wishlist/{listingId}` |
-| Host | GET `/host`; POST `/host/listings`; PUT `/host/listings/{id}`; POST `/host/listings/{id}/images`, `/host/listings/{id}/blocks`; DELETE `/host/listings/{id}/blocks/{blockId}` |
+| Host | GET `/host`; POST `/host/listings`; PUT `/host/listings/{id}`; POST/DELETE `/host/listings/{id}/images`; POST `/host/listings/{id}/blocks`; DELETE `/host/listings/{id}/blocks/{blockId}` |
 | Administration | GET `/admin`; POST `/admin/listings/{id}/publication` |
 
 Use a browser cookie jar or cookie-aware API client. Obtain `GET /auth/csrf` first; it

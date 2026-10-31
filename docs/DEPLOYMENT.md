@@ -54,6 +54,10 @@ Compose's public edge uses `PUBLIC_PORT`. `DATABASE_URL`, `DATABASE_USER`, `DATA
 and `MEDIA_ROOT` configure Spring. `API_INTERNAL_URL` is server-only and defaults to the
 host's 8080. The Docker build sets it to `http://backend:8080` for rewrite generation as
 well as runtime SSR. If changing that Docker address, rebuild the frontend too.
+`DEMO_REFERENCE_DATE` optionally fixes the fixture reference date for a controlled rehearsal;
+unset it for dates relative to each new demo context. V4 is a one-time compatibility migration
+from the task’s pre-release Spring 3 prototype: it invalidates only synthetic/anonymous
+prototype sessions, retaining bookings and users. Ordinary release restarts retain sessions.
 `PUBLIC_ORIGIN` sets social metadata; it is a server build setting, never a secret.
 
 ## Tests and builds

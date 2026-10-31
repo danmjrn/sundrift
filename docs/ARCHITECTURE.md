@@ -160,8 +160,9 @@ JPEG/PNG uploads are limited to 5 MB, 10,000–24,000,000 pixels and twelve imag
 The adapter validates decoded content and dimensions before full decoding, re-encodes to
 PNG, strips original metadata, assigns a random server filename and stores it under one
 persistent root. Submitted filenames/paths are never used. Re-encoding a bounded source can
-produce a larger stored PNG; disk quotas are a VPS operational concern. A failed transaction
-after writing a file may leave an unreferenced file; operator reconciliation is future work.
+produce a larger stored PNG; disk quotas are a VPS operational concern. Removing a photograph removes only that listing’s reference; media files and shared fixture
+assets are retained. Removing the final photograph returns the listing to draft. A failed transaction
+after writing a file may also leave an unreferenced file; operator reconciliation is future work.
 
 Significant publication changes create audit records. Safe health/readiness endpoints
 expose no configuration. Structured request logs contain method, status, duration and a

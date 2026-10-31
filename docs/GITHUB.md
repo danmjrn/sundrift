@@ -21,7 +21,8 @@ not printed, changed or rotated. No GitHub plugin connection is claimed.
 
 Work is on **[feat/noirstay-portfolio](https://github.com/danmjrn/noirstay/tree/feat/noirstay-portfolio)**.
 The default branch is preserved for review; no force-push, branch-protection change or
-merge is performed. The final verification document records the release commit and PR.
+merge is performed. The reviewable [PR #1](https://github.com/danmjrn/noirstay/pull/1) targets `main`.
+The verification document records the tested application/test commits and CI evidence.
 
 For subsequent authorized updates:
 
